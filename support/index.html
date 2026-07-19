@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Support for TYP (Track Your Pep) — getting started, FAQ, data & privacy, and contact.">
+<title>TYP — Support</title>
+<style>
+  :root {
+    --ground:#F1F7F5; --surface:#FFFFFF; --surface-2:#E9F3F0;
+    --ink:#0F1F1D; --muted:#546A66; --line:#DCE9E6;
+    --brand:#0E8A80; --brand-strong:#0B6C64; --brand-tint:#E1F2EF;
+    --shadow:0 1px 2px rgba(10,40,36,.04), 0 8px 24px rgba(10,40,36,.06);
+    --radius:18px;
+    --font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+    --font-round:ui-rounded,"SF Pro Rounded",-apple-system,system-ui,sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ground:#06110F; --surface:#0D1A18; --surface-2:#122320;
+      --ink:#E9F2F0; --muted:#8AA39E; --line:#20322F;
+      --brand:#37C6BA; --brand-strong:#5AD6CB; --brand-tint:#123A36;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  * { box-sizing:border-box; }
+  body {
+    margin:0; background:var(--ground); color:var(--ink);
+    font-family:var(--font-sans); line-height:1.6;
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  }
+  .wrap { max-width:760px; margin:0 auto; padding:clamp(24px,5vw,56px) clamp(18px,5vw,28px) 72px; }
+  header { text-align:center; margin-bottom:clamp(32px,6vw,52px); }
+  .mark { width:76px; height:76px; margin:0 auto 18px; display:block;
+    filter:drop-shadow(0 8px 20px rgba(14,138,128,.28)); }
+  .wordmark { font-family:var(--font-round); font-weight:800; letter-spacing:.02em;
+    font-size:clamp(30px,7vw,40px); margin:0; line-height:1; }
+  .tagline { color:var(--brand); font-weight:600; letter-spacing:.08em;
+    text-transform:uppercase; font-size:12px; margin:10px 0 0; }
+  .lede { color:var(--muted); max-width:52ch; margin:16px auto 0; font-size:16px; }
+  section { margin-top:clamp(30px,6vw,44px); }
+  h2 { font-family:var(--font-round); font-weight:700; font-size:20px;
+    margin:0 0 16px; letter-spacing:-.01em; display:flex; align-items:center; gap:9px; }
+  h2 .dot { width:7px; height:7px; border-radius:50%; background:var(--brand); flex:none; }
+  .steps { list-style:none; margin:0; padding:0; display:grid; gap:12px; counter-reset:s; }
+  .steps li { counter-increment:s; background:var(--surface); border:1px solid var(--line);
+    border-radius:var(--radius); padding:16px 18px 16px 58px; position:relative; box-shadow:var(--shadow); }
+  .steps li::before { content:counter(s); position:absolute; left:16px; top:16px;
+    width:28px; height:28px; border-radius:9px; background:var(--brand-tint); color:var(--brand-strong);
+    font-family:var(--font-round); font-weight:700; font-size:15px;
+    display:flex; align-items:center; justify-content:center; }
+  .steps b { font-weight:650; } .steps span { color:var(--muted); }
+  .faq { display:grid; gap:10px; }
+  details { background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+    box-shadow:var(--shadow); overflow:hidden; }
+  summary { cursor:pointer; list-style:none; padding:16px 20px; font-weight:600; font-size:16px;
+    display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  summary::-webkit-details-marker { display:none; }
+  summary::after { content:"+"; color:var(--brand); font-family:var(--font-round); font-weight:700;
+    font-size:22px; line-height:1; flex:none; transition:transform .2s ease; }
+  details[open] summary::after { transform:rotate(45deg); }
+  details .body { padding:0 20px 18px; color:var(--muted); }
+  details .body :first-child { margin-top:0; }
+  summary:focus-visible { outline:2px solid var(--brand); outline-offset:-2px; border-radius:var(--radius); }
+  .contact { background:linear-gradient(135deg,var(--brand),var(--brand-strong));
+    border-radius:22px; padding:28px 26px; text-align:center; color:#fff; box-shadow:var(--shadow); }
+  .contact h2 { color:#fff; justify-content:center; margin-bottom:6px; }
+  .contact p { margin:0 auto 18px; max-width:44ch; opacity:.92; }
+  .btn { display:inline-block; background:#fff; color:var(--brand-strong); font-weight:700;
+    font-family:var(--font-round); text-decoration:none; padding:13px 26px; border-radius:999px;
+    box-shadow:0 6px 16px rgba(0,0,0,.18); }
+  footer { margin-top:clamp(36px,7vw,56px); padding-top:24px; border-top:1px solid var(--line);
+    color:var(--muted); font-size:13px; text-align:center; }
+  footer .disc { margin-top:12px; font-size:12px; line-height:1.55; max-width:60ch; margin-inline:auto; }
+  a { color:var(--brand-strong); }
+  @media (prefers-color-scheme: dark) { a { color:var(--brand); } }
+  @media (prefers-reduced-motion:reduce) { * { animation:none !important; } }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <svg class="mark" viewBox="0 0 96 96" role="img" aria-label="TYP app icon">
+        <defs><linearGradient id="tile" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#2ec9ba"/><stop offset="1" stop-color="#0e7c74"/>
+        </linearGradient></defs>
+        <rect x="3" y="3" width="90" height="90" rx="24" fill="url(#tile)"/>
+        <rect x="40" y="20" width="16" height="11" rx="3.5" fill="#fff"/>
+        <rect x="43.5" y="29" width="9" height="4" fill="#fff"/>
+        <rect x="33" y="31" width="30" height="47" rx="10" fill="#fff"/>
+        <rect x="45" y="47" width="6" height="17" rx="1.6" fill="url(#tile)"/>
+        <rect x="39.5" y="52.7" width="17" height="6" rx="1.6" fill="url(#tile)"/>
+      </svg>
+      <h1 class="wordmark">TYP</h1>
+      <p class="tagline">Track Your Pep</p>
+      <p class="lede">Help and answers for tracking your peptide protocol — logging doses, building schedules, reminders, and progress.</p>
+    </header>
+
+    <section>
+      <h2><span class="dot"></span>Getting started</h2>
+      <ol class="steps">
+        <li><b>Add a peptide.</b> <span>Open the Peptides tab and tap +. Give it a name, dose, unit, and route, then pick a color and icon.</span></li>
+        <li><b>Build a schedule.</b> <span>Choose daily, weekly, every-N-days, or several times a day — and turn on reminders.</span></li>
+        <li><b>Log your doses.</b> <span>On the Today tab, tap Log dose (or mark it skipped). You can also add an as-needed log anytime.</span></li>
+        <li><b>Track progress.</b> <span>The Progress tab shows weight &amp; BMI, adherence, streaks, and wellbeing over time.</span></li>
+      </ol>
+    </section>
+
+    <section>
+      <h2><span class="dot"></span>Frequently asked questions</h2>
+      <div class="faq">
+        <details><summary>How do reminders work?</summary><div class="body"><p>TYP schedules notifications for your upcoming doses, and you can log a dose right from the notification. Make sure notifications are allowed for TYP in the iOS Settings app.</p></div></details>
+        <details><summary>Can I use TYP on more than one device?</summary><div class="body"><p>Yes. Sign in with the same account on each device and your peptides, schedules, and history stay in sync.</p></div></details>
+        <details><summary>Do widgets and Live Activities work?</summary><div class="body"><p>Yes. Add the next-dose, today, or full-schedule widgets to your Home or Lock Screen, and your next dose can appear as a Live Activity so it's always a glance away.</p></div></details>
+        <details><summary>How do I export or back up my data?</summary><div class="body"><p>Go to Settings → Backup. You can export a PDF report or a CSV, or create an encrypted backup that you can restore later.</p></div></details>
+        <details><summary>Is my data private?</summary><div class="body"><p>Your records are stored in your own account, isolated from other users, and encrypted in transit and at rest. There are no ads and no third-party analytics SDKs. Full details are shown on the Privacy screen inside the app.</p></div></details>
+        <details><summary>How do I delete my account and all my data?</summary><div class="body"><p>Go to Settings → Account → Delete Account. This permanently removes your account and every record associated with it. It can't be undone.</p></div></details>
+        <details><summary>I forgot my password.</summary><div class="body"><p>On the sign-in screen, tap "Forgot password?" and we'll email you a reset link. You can also sign in with Apple instead.</p></div></details>
+      </div>
+    </section>
+
+    <section>
+      <div class="contact">
+        <h2><span class="dot" style="background:#fff"></span>Still need help?</h2>
+        <p>Email us and we'll get back to you as soon as we can.</p>
+        <a class="btn" href="mailto:support@peptrack.app">support@peptrack.app</a>
+      </div>
+    </section>
+
+    <footer>
+      <div>© 2026 TYP · Track Your Pep</div>
+      <p class="disc"><strong>TYP is a personal record-keeping and reminder tool only</strong>, for tracking information you choose to enter. It does not sell, supply, produce, or endorse any peptide, medication, or other substance, provides no medical advice or dosage recommendations, and verifies no product safety. Many peptides are not approved for human use and may be for research use only, or otherwise regulated, where you live — you are solely responsible for complying with all applicable laws and for your own decisions. Always consult a licensed healthcare professional. You use TYP entirely at your own risk.</p>
+    </footer>
+  </div>
+</body>
+</html>
