@@ -1,237 +1,578 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TYP — Track Your Pep</title>
-<meta name="description" content="TYP is the clean, private way to track your peptide protocol — log doses, stay on schedule with reminders and widgets, and watch your progress.">
-<meta property="og:title" content="TYP — Track Your Pep">
-<meta property="og:description" content="Log every dose, stay on schedule, and watch your progress. A clean, private peptide tracker for iPhone.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect width='96' height='96' rx='24' fill='%230e8a80'/%3E%3Crect x='40' y='20' width='16' height='11' rx='3.5' fill='white'/%3E%3Crect x='33' y='31' width='30' height='47' rx='10' fill='white'/%3E%3Crect x='45' y='47' width='6' height='17' rx='1.6' fill='%230e8a80'/%3E%3Crect x='39.5' y='52.7' width='17' height='6' rx='1.6' fill='%230e8a80'/%3E%3C/svg%3E">
+<meta name="description" content="The project hub of Swanks — apps and experiments, indexed in one place.">
+<meta name="color-scheme" content="dark light">
+<title>Swanks — Project Index</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23151517'/%3E%3Ccircle cx='32' cy='32' r='11' fill='%23f2a33c'/%3E%3C/svg%3E">
 <style>
+/* ============================================================
+   SWANKS — PROJECT INDEX
+   Aesthetic: instrument-ledger / mission-control.
+   Hub identity: warm graphite + signal amber + mono microtype.
+   Each project card carries its OWN accent via --accent.
+   ============================================================ */
+
+/* ---------- tokens ---------- */
+:root{
+  color-scheme: dark light;
+
+  /* dark (default) */
+  --bg:        #101012;
+  --bg-2:      #151518;
+  --card:      #17171a;
+  --card-edge: rgba(255,255,255,.035);
+  --ink:       #ecebe6;
+  --ink-2:     #a9a79f;
+  --ink-3:     #71706a;
+  --line:      #2a2a2e;
+  --line-2:    #202023;
+  --amber:     #f2a33c;
+  --amber-dim: rgba(242,163,60,.14);
+  --glow:      rgba(242,140,40,.09);
+  --gridline:  rgba(255,255,255,.033);
+  --typ:       #2ec9ba;               /* TYP project accent, dark-safe */
+  --typ-soft:  rgba(46,201,186,.14);
+  --shot-glow: rgba(27,169,162,.22);
+  --noise-op:  .05;
+
+  /* type */
+  --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  --sans: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: light){
   :root{
-    --ground:#F2F8F6; --surface:#FFFFFF; --surface-2:#EAF3F0;
-    --ink:#0C1A18; --muted:#57706C; --line:#DBE8E5;
-    --brand:#0E8A80; --brand2:#17B3A6; --brand3:#2EC9BA; --deep:#0B4A49; --tint:#E2F3F0;
-    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
-    --round:ui-rounded,"SF Pro Rounded",-apple-system,system-ui,sans-serif;
-    --maxw:1120px;
+    --bg:        #f3f0e8;
+    --bg-2:      #efebe1;
+    --card:      #fbf9f4;
+    --card-edge: rgba(255,255,255,.6);
+    --ink:       #201e1a;
+    --ink-2:     #5d5a52;
+    --ink-3:     #8f8b80;
+    --line:      #d8d2c3;
+    --line-2:    #e4dfd2;
+    --amber:     #935a00;
+    --amber-dim: rgba(147,90,0,.12);
+    --glow:      rgba(206,132,26,.13);
+    --gridline:  rgba(46,36,16,.055);
+    --typ:       #0e8a80;
+    --typ-soft:  rgba(14,138,128,.11);
+    --shot-glow: rgba(14,138,128,.18);
+    --noise-op:  .06;
   }
-  @media (prefers-color-scheme:dark){
-    :root{
-      --ground:#050D0C; --surface:#0C1918; --surface-2:#0F201E;
-      --ink:#EAF3F1; --muted:#8AA39E; --line:#1C2E2B;
-      --brand:#2DBFB2; --brand2:#38D6C8; --brand3:#46E3D4; --deep:#031412; --tint:#0F3A36;
-    }
-  }
-  *{box-sizing:border-box}
-  html{scroll-behavior:smooth}
-  body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--font);line-height:1.6;
-    -webkit-font-smoothing:antialiased;overflow-x:hidden}
-  a{color:inherit}
-  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
-  h1,h2,h3{font-family:var(--round);letter-spacing:-.02em;line-height:1.05;margin:0}
-  .eyebrow{font-family:var(--round);font-weight:700;font-size:12.5px;letter-spacing:.18em;
-    text-transform:uppercase;color:var(--brand)}
+}
 
-  /* Nav */
-  nav{position:fixed;top:0;left:0;right:0;z-index:50;transition:background .3s,box-shadow .3s,border-color .3s;
-    border-bottom:1px solid transparent}
-  nav.scrolled{background:color-mix(in srgb,var(--ground) 80%,transparent);
-    backdrop-filter:saturate(160%) blur(16px);-webkit-backdrop-filter:saturate(160%) blur(16px);
-    border-bottom:1px solid var(--line)}
-  .navin{display:flex;align-items:center;justify-content:space-between;height:64px}
-  .brand{display:flex;align-items:center;gap:10px;font-family:var(--round);font-weight:800;font-size:20px;letter-spacing:-.01em}
-  .brand svg{width:30px;height:30px;border-radius:9px;box-shadow:0 4px 12px rgba(14,138,128,.35)}
-  .pill{font-family:var(--round);font-weight:700;font-size:14px;text-decoration:none;
-    padding:9px 18px;border-radius:999px;background:var(--brand);color:#fff;white-space:nowrap;
-    box-shadow:0 6px 18px -6px var(--brand);transition:transform .15s,box-shadow .15s}
-  .pill:hover{transform:translateY(-1px);box-shadow:0 10px 22px -6px var(--brand)}
+/* ---------- base ---------- */
+*{ box-sizing:border-box; margin:0; }
+html{ scroll-behavior:smooth; }
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:15.5px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  min-height:100svh;
+}
+::selection{ background:var(--amber); color:#131313; }
+a{ color:inherit; }
+:focus-visible{ outline:2px solid var(--amber); outline-offset:3px; border-radius:4px; }
+img{ max-width:100%; }
+.sr{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
 
-  /* Hero */
-  header{position:relative;padding:150px 0 40px;text-align:center;overflow:hidden}
-  .aurora{position:absolute;inset:-20% -20% auto;height:900px;z-index:0;pointer-events:none;filter:blur(60px);opacity:.9}
-  .aurora::before,.aurora::after{content:"";position:absolute;border-radius:50%}
-  .aurora::before{width:620px;height:620px;left:8%;top:-60px;
-    background:radial-gradient(circle,var(--brand3),transparent 62%);opacity:.5}
-  .aurora::after{width:560px;height:560px;right:6%;top:40px;
-    background:radial-gradient(circle,var(--brand),transparent 62%);opacity:.42}
-  header .wrap{position:relative;z-index:1}
-  h1{font-size:clamp(38px,7vw,72px);font-weight:800;max-width:15ch;margin:16px auto 0;text-wrap:balance}
-  h1 .grad{background:linear-gradient(120deg,var(--brand2),var(--brand));-webkit-background-clip:text;background-clip:text;color:transparent}
-  .lede{font-size:clamp(17px,2.4vw,20px);color:var(--muted);max-width:56ch;margin:22px auto 0;text-wrap:balance}
-  .cta{margin-top:34px;display:flex;gap:14px;justify-content:center;align-items:center;flex-wrap:wrap}
-  .badge{display:inline-flex;align-items:center;gap:11px;background:var(--ink);color:var(--ground);
-    text-decoration:none;padding:13px 22px;border-radius:15px;font-family:var(--round);transition:transform .15s}
-  .badge:hover{transform:translateY(-2px)}
-  .badge svg{width:26px;height:26px}
-  .badge b{font-size:18px;font-weight:700;line-height:1;display:block}
-  .badge small{font-size:11px;opacity:.7;letter-spacing:.02em}
-  .soon{font-size:13px;color:var(--muted)}
+/* ---------- ambient layers ---------- */
+.gridbg, .aurora, .noise{ position:fixed; inset:0; pointer-events:none; }
+.gridbg{
+  background-image:
+    linear-gradient(to right,  var(--gridline) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--gridline) 1px, transparent 1px);
+  background-size:64px 64px;
+  -webkit-mask-image:radial-gradient(120% 75% at 50% 0%, #000 25%, transparent 78%);
+          mask-image:radial-gradient(120% 75% at 50% 0%, #000 25%, transparent 78%);
+  z-index:0;
+}
+.aurora{
+  inset:-25%;
+  background:
+    radial-gradient(640px 420px at 22% 12%, var(--glow), transparent 62%),
+    radial-gradient(520px 380px at 88% 78%, var(--typ-soft), transparent 65%);
+  animation:drift 30s ease-in-out infinite alternate;
+  z-index:0;
+}
+@keyframes drift{
+  from{ transform:translate3d(0,0,0) scale(1); }
+  to  { transform:translate3d(4%,3%,0) scale(1.07); }
+}
+.noise{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:var(--noise-op);
+  mix-blend-mode:overlay;
+  z-index:3;
+}
 
-  /* Phones */
-  .hero-phones{position:relative;z-index:1;display:flex;justify-content:center;align-items:flex-end;
-    gap:0;margin-top:56px;perspective:1600px}
-  .phone{position:relative;border-radius:42px;background:#0b0b0d;padding:9px;
-    box-shadow:0 50px 90px -30px rgba(11,74,73,.55),0 0 0 1px rgba(0,0,0,.05)}
-  .phone img{display:block;width:100%;border-radius:34px}
-  .hero-phones .phone{width:270px}
-  .hero-phones .p1{transform:rotate(-5deg) translateY(18px);z-index:1}
-  .hero-phones .p2{transform:rotate(5deg) translateY(18px);margin-left:-58px;z-index:2}
-  @media (max-width:640px){.hero-phones .p2{display:none}.hero-phones .p1{transform:none}}
+/* ---------- shell ---------- */
+.shell{
+  position:relative; z-index:1;
+  max-width:1120px;
+  margin:0 auto;
+  padding:0 clamp(20px, 4vw, 44px) 0;
+}
 
-  /* Sections */
-  section{padding:70px 0;position:relative}
-  .feature{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,6vw,80px);align-items:center}
-  .feature.rev .copy{order:2}
-  .feature .phone{width:290px;margin:0 auto}
-  .feature h2{font-size:clamp(28px,4vw,42px);font-weight:800;margin-top:12px}
-  .feature p{color:var(--muted);font-size:17px;margin:16px 0 0;max-width:44ch}
-  @media (max-width:820px){.feature{grid-template-columns:1fr;text-align:center}
-    .feature.rev .copy{order:0}.feature p{margin-inline:auto}}
+/* ---------- micro type ---------- */
+.micro{
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--ink-2);
+}
+.micro b{ color:var(--amber); font-weight:600; }
 
-  .band{background:var(--surface);border-block:1px solid var(--line)}
-  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:44px}
-  @media (max-width:820px){.grid{grid-template-columns:repeat(2,1fr)}}
-  .card{background:var(--ground);border:1px solid var(--line);border-radius:18px;padding:22px}
-  .card .ic{width:40px;height:40px;border-radius:11px;background:var(--tint);color:var(--brand);
-    display:flex;align-items:center;justify-content:center;margin-bottom:14px}
-  .card .ic svg{width:21px;height:21px}
-  .card h3{font-size:16px;font-weight:700}
-  .card p{color:var(--muted);font-size:14px;margin:6px 0 0}
-  .sec-head{text-align:center;max-width:40ch;margin:0 auto}
-  .sec-head h2{font-size:clamp(28px,4vw,42px);font-weight:800;margin-top:10px}
-  .sec-head p{color:var(--muted);font-size:17px;margin-top:14px}
+/* ---------- top bar ---------- */
+.topbar{
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  padding:18px 0 16px;
+  border-bottom:1px solid var(--line-2);
+}
+.topbar .brand{ display:flex; align-items:center; gap:10px; }
+.beacon{
+  width:8px; height:8px; border-radius:50%;
+  background:var(--amber);
+  box-shadow:0 0 0 0 var(--amber-dim);
+  animation:pulse 2.6s cubic-bezier(.4,0,.2,1) infinite;
+}
+@keyframes pulse{
+  0%  { box-shadow:0 0 0 0   color-mix(in srgb, var(--amber) 45%, transparent); }
+  70% { box-shadow:0 0 0 9px transparent; }
+  100%{ box-shadow:0 0 0 0   transparent; }
+}
+.topbar nav{ display:flex; align-items:center; gap:20px; }
+.topbar a{
+  font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--ink-2); text-decoration:none;
+  transition:color .18s ease;
+}
+.topbar a:hover{ color:var(--amber); }
+#utc{ font-variant-numeric:tabular-nums; color:var(--ink-3); }
 
-  /* Privacy */
-  .privacy{text-align:center}
-  .privacy .box{background:linear-gradient(140deg,var(--brand),var(--deep));border-radius:28px;
-    padding:clamp(36px,6vw,64px) 28px;color:#fff;position:relative;overflow:hidden}
-  .privacy .box::after{content:"";position:absolute;width:400px;height:400px;right:-120px;top:-140px;
-    background:radial-gradient(circle,rgba(255,255,255,.16),transparent 60%)}
-  .privacy h2{font-size:clamp(26px,4vw,40px);font-weight:800;position:relative}
-  .privacy p{max-width:56ch;margin:18px auto 0;opacity:.92;font-size:17px;position:relative}
+/* ---------- hero ---------- */
+.hero{
+  display:grid;
+  grid-template-columns:1fr minmax(230px, 300px);
+  gap:clamp(28px, 5vw, 64px);
+  align-items:end;
+  padding:clamp(56px, 9vh, 96px) 0 clamp(40px, 6vh, 64px);
+}
+.hero .kicker{ margin-bottom:22px; color:var(--amber); }
+.hero h1{
+  font-size:clamp(3.3rem, 7.6vw, 5.4rem);
+  font-weight:800;
+  letter-spacing:-.045em;
+  line-height:.98;
+}
+.hero h1 .tick{ color:var(--amber); }
+.hero .sub{
+  margin-top:20px;
+  max-width:36ch;
+  font-size:clamp(1rem, 1.4vw, 1.1rem);
+  color:var(--ink-2);
+  text-wrap:pretty;
+}
+.hero .sub strong{ color:var(--ink); font-weight:600; }
 
-  /* Final + footer */
-  .final{text-align:center}
-  .final h2{font-size:clamp(30px,5vw,52px);font-weight:800}
-  footer{border-top:1px solid var(--line);padding:44px 0;color:var(--muted);font-size:14px}
-  .foot{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
-  .foot a{text-decoration:none;color:var(--muted)}
-  .foot a:hover{color:var(--brand)}
-  .foot nav{position:static;display:flex;gap:22px;border:0}
-  .disc{margin-top:22px;font-size:12px;line-height:1.6;color:var(--muted);opacity:.85;max-width:80ch}
+/* readout panel */
+.readout{
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:color-mix(in srgb, var(--card) 72%, transparent);
+  backdrop-filter:blur(6px);
+  padding:16px 18px 14px;
+  box-shadow:inset 0 1px 0 var(--card-edge);
+}
+.readout .head{
+  display:flex; justify-content:space-between; align-items:center;
+  padding-bottom:10px; margin-bottom:6px;
+  border-bottom:1px solid var(--line-2);
+}
+.readout .row{
+  display:flex; align-items:baseline; gap:10px;
+  font-family:var(--mono); font-size:12px; letter-spacing:.08em;
+  color:var(--ink-2);
+  padding:7px 0;
+}
+.readout .row .leader{ flex:1; border-bottom:1px dotted var(--line); transform:translateY(-4px); }
+.readout .row .val{ color:var(--ink); font-weight:600; font-variant-numeric:tabular-nums; }
+.readout .row .val.hot{ color:var(--amber); }
 
-  /* Reveal */
-  .r{opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
-  .r.in{opacity:1;transform:none}
-  @media (prefers-reduced-motion:reduce){.r{opacity:1;transform:none;transition:none}
-    .hero-phones .p1,.hero-phones .p2{transform:none}}
+/* ---------- section head ---------- */
+.sect{ padding:8px 0 96px; }
+.sect-head{
+  display:flex; align-items:center; gap:16px;
+  margin-bottom:22px;
+}
+.sect-head .rule{ flex:1; height:1px; background:var(--line-2); position:relative; }
+.sect-head .rule::before,
+.sect-head .rule::after{
+  content:"+";
+  position:absolute; top:50%;
+  transform:translateY(-52%);
+  font-family:var(--mono); font-size:11px; color:var(--ink-3);
+}
+.sect-head .rule::before{ left:-2px; }
+.sect-head .rule::after{ right:-2px; }
+.sect-head .count{ color:var(--ink-3); }
+
+/* ============================================================
+   CARD SYSTEM
+   To add a project: copy the <a class="card"> template at the
+   bottom of the grid markup, set --accent + --d (reveal delay),
+   bump the N° index, done.
+   ============================================================ */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(6, 1fr);
+  gap:14px;
+}
+.card{
+  --accent: var(--amber);
+  position:relative;
+  grid-column:span 2;
+  display:flex; flex-direction:column;
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:var(--card);
+  box-shadow:inset 0 1px 0 var(--card-edge);
+  padding:20px 22px 22px;
+  overflow:hidden;
+  text-decoration:none;
+  transition:transform .28s cubic-bezier(.22,1,.36,1),
+             border-color .28s ease,
+             box-shadow .28s ease;
+}
+/* accent tab: short top hairline that extends on hover */
+.card::before{
+  content:"";
+  position:absolute; top:0; left:22px;
+  width:44px; height:2px;
+  background:var(--accent);
+  border-radius:0 0 2px 2px;
+  transition:width .38s cubic-bezier(.22,1,.36,1);
+}
+a.card:hover, a.card:focus-visible{
+  transform:translateY(-4px);
+  border-color:color-mix(in srgb, var(--accent) 45%, var(--line));
+  box-shadow:inset 0 1px 0 var(--card-edge),
+             0 18px 44px -18px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+a.card:hover::before, a.card:focus-visible::before{ width:calc(100% - 44px); }
+
+.card .toprow{
+  display:flex; justify-content:space-between; align-items:center; gap:10px;
+  margin-bottom:18px;
+}
+.card .num{ color:var(--ink-3); }
+.chip{
+  display:inline-flex; align-items:center; gap:7px;
+  font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--ink-2);
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:4px 11px;
+  white-space:nowrap;
+}
+.chip .dot{ width:6px; height:6px; border-radius:50%; background:var(--ink-3); flex:none; }
+.chip.review{ color:var(--amber); border-color:color-mix(in srgb, var(--amber) 35%, var(--line)); }
+.chip.review .dot{ background:var(--amber); animation:pulse 2.6s cubic-bezier(.4,0,.2,1) infinite; }
+
+.card h3{
+  font-size:22px; font-weight:700; letter-spacing:-.015em; line-height:1.25;
+  color:var(--ink);
+}
+.card .tag-line{ color:var(--ink-2); margin-top:6px; max-width:34ch; text-wrap:pretty; }
+.tags{ display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+.tags .chip{ padding:3px 10px; }
+
+/* ---- featured card (TYP) ---- */
+.card--featured{
+  grid-column:span 4;
+  display:grid;
+  grid-template-columns:1fr 236px;
+  gap:26px;
+  padding:22px 26px 0 26px;
+  min-height:340px;
+}
+.card--featured .info{ display:flex; flex-direction:column; padding-bottom:24px; }
+.card--featured .toprow{ margin-bottom:20px; }
+.title-row{ display:flex; align-items:center; gap:14px; }
+.appmark{ width:46px; height:46px; flex:none; filter:drop-shadow(0 4px 10px var(--shot-glow)); }
+.appmark svg{ display:block; width:100%; height:100%; }
+.card--featured .cta{
+  margin-top:auto; padding-top:22px;
+  display:flex; align-items:center; gap:9px;
+  font-family:var(--mono); font-size:11.5px; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--typ); font-weight:600;
+}
+.cta .arrow{ transition:transform .28s cubic-bezier(.22,1,.36,1); }
+a.card:hover .cta .arrow, a.card:focus-visible .cta .arrow{ transform:translateX(5px); }
+
+/* phone screenshot, docked into the card's bottom edge */
+.shotwrap{ position:relative; align-self:end; }
+.shotwrap::before{
+  content:"";
+  position:absolute; inset:-8% -14%;
+  background:radial-gradient(60% 55% at 50% 55%, var(--shot-glow), transparent 70%);
+}
+.shot{
+  position:relative;
+  width:100%;
+  height:296px;
+  border:1px solid color-mix(in srgb, var(--typ) 28%, var(--line));
+  border-bottom:0;
+  border-radius:26px 26px 0 0;
+  overflow:hidden;
+  background:#f4f4f6;
+  transform:rotate(1.6deg) translateY(6px);
+  transform-origin:bottom center;
+  box-shadow:0 -8px 40px -14px var(--shot-glow);
+  transition:transform .38s cubic-bezier(.22,1,.36,1);
+}
+a.card:hover .shot, a.card:focus-visible .shot{ transform:rotate(.4deg) translateY(2px); }
+.shot img{ display:block; width:100%; height:100%; object-fit:cover; object-position:top center; }
+
+/* ---- coming-soon cards ---- */
+.card--soon{ min-height:196px; cursor:default; }
+.card--soon::before{ background:var(--ink-3); opacity:.5; }
+.card--soon .ghost{
+  position:absolute; right:6px; bottom:-26px;
+  font-size:104px; font-weight:800; letter-spacing:-.06em;
+  color:var(--ink); opacity:.045;
+  font-variant-numeric:tabular-nums;
+  pointer-events:none; user-select:none;
+}
+.card--soon .tag-line{ font-size:14px; }
+.redact{ display:inline-flex; gap:6px; align-items:center; }
+.redact i{
+  display:inline-block; height:14px; border-radius:4px;
+  background:var(--ink-3); opacity:.38;
+}
+.lock{ color:var(--ink-3); flex:none; }
+
+/* ---- reserved slot ---- */
+.card--slot{
+  grid-column:span 4;
+  min-height:150px;
+  border-style:dashed;
+  background:transparent;
+  box-shadow:none;
+  align-items:center; justify-content:center; gap:10px;
+  color:var(--ink-3);
+}
+.card--slot::before{ display:none; }
+.card--slot .plus{ font-family:var(--mono); font-size:22px; line-height:1; }
+
+/* ---------- footer ---------- */
+footer{
+  border-top:1px solid var(--line-2);
+  padding:24px 0 40px;
+  display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap;
+}
+footer .micro a{ color:var(--ink-2); text-decoration:none; transition:color .18s ease; }
+footer .micro a:hover{ color:var(--amber); }
+
+/* ---------- orchestrated reveal ---------- */
+.reveal{
+  opacity:0;
+  animation:rise .85s cubic-bezier(.22,1,.36,1) forwards;
+  animation-delay:var(--d, 0s);
+}
+@keyframes rise{
+  from{ opacity:0; transform:translateY(18px); }
+  to  { opacity:1; transform:translateY(0); }
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 920px){
+  .hero{ grid-template-columns:1fr; align-items:start; }
+  .readout{ max-width:360px; }
+  .card--featured{ grid-column:span 6; }
+  .card{ grid-column:span 3; }
+  .card--slot{ grid-column:span 6; }
+}
+@media (max-width: 640px){
+  .card, .card--featured, .card--slot{ grid-column:span 6; }
+  .card--featured{ grid-template-columns:1fr; padding:20px 22px 0; min-height:0; }
+  .shotwrap{ margin-top:22px; }
+  .shot{ height:230px; max-width:260px; margin:0 auto; }
+  .topbar nav{ gap:14px; }
+  #utc{ display:none; }
+}
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior:auto; }
+  .reveal{ animation:none; opacity:1; }
+  .aurora, .beacon, .chip.review .dot{ animation:none; }
+  .card, .cta .arrow, .shot, .card::before{ transition:none; }
+  a.card:hover, a.card:focus-visible{ transform:none; }
+  a.card:hover .shot, a.card:focus-visible .shot{ transform:rotate(1.6deg) translateY(6px); }
+}
 </style>
 </head>
 <body>
-  <nav id="nav"><div class="wrap navin">
-    <span class="brand">
-      <svg viewBox="0 0 96 96"><rect width="96" height="96" rx="24" fill="#0e8a80"/><rect x="40" y="20" width="16" height="11" rx="3.5" fill="#fff"/><rect x="33" y="31" width="30" height="47" rx="10" fill="#fff"/><rect x="45" y="47" width="6" height="17" rx="1.6" fill="#0e8a80"/><rect x="39.5" y="52.7" width="17" height="6" rx="1.6" fill="#0e8a80"/></svg>
-      TYP
-    </span>
-    <a class="pill" href="#get">Get the app</a>
-  </div></nav>
 
-  <header>
-    <div class="aurora"></div>
-    <div class="wrap">
-      <p class="eyebrow r in">Track Your Pep</p>
-      <h1 class="r in">Your peptide protocol,<br><span class="grad">perfectly tracked.</span></h1>
-      <p class="lede r in">Log every dose, stay on schedule with smart reminders, and watch your progress — in one clean, private app built for people who run their own protocols.</p>
-      <div class="cta r in" id="get">
-        <a class="badge" href="#get" aria-label="Coming soon to the App Store">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.9c0-2.2 1.8-3.3 1.9-3.3-1-1.5-2.6-1.7-3.2-1.7-1.4-.1-2.6.8-3.3.8s-1.8-.8-2.9-.8c-1.5 0-2.9.9-3.6 2.2-1.6 2.7-.4 6.7 1.1 8.9.7 1.1 1.6 2.3 2.8 2.2 1.1 0 1.5-.7 2.9-.7s1.7.7 2.9.7c1.2 0 2-1.1 2.7-2.1.8-1.2 1.2-2.4 1.2-2.5-.1 0-2.3-.9-2.3-3.6zM14.2 6.3c.6-.7 1-1.8.9-2.8-.9 0-1.9.6-2.5 1.3-.5.6-1 1.6-.9 2.6 1 .1 2-.5 2.5-1.1z"/></svg>
-          <span><small>Coming soon on the</small><b>App Store</b></span>
-        </a>
-        <span class="soon">In review — launching soon.</span>
-      </div>
-      <div class="hero-phones r in">
-        <div class="phone p1"><img src="img/today-dark.png" alt="TYP Today screen in dark mode" loading="eager"></div>
-        <div class="phone p2"><img src="img/today.png" alt="TYP Today screen in light mode" loading="eager"></div>
-      </div>
+<div class="gridbg" aria-hidden="true"></div>
+<div class="aurora" aria-hidden="true"></div>
+
+<div class="shell">
+
+  <!-- ── top bar ─────────────────────────────────────────── -->
+  <header class="topbar reveal" style="--d:.05s">
+    <div class="brand">
+      <span class="beacon" aria-hidden="true"></span>
+      <span class="micro"><b>Swanks</b> — project index</span>
     </div>
+    <nav aria-label="Site">
+      <span class="micro" id="utc" aria-hidden="true">--:--:-- UTC</span>
+      <a href="https://github.com/itsSwanks" rel="noopener">GitHub&nbsp;&#8599;</a>
+    </nav>
   </header>
 
-  <section><div class="wrap feature">
-    <div class="copy r"><p class="eyebrow">Reminders · Widgets · Live Activities</p>
-      <h2>Never miss a dose.</h2>
-      <p>Smart reminders you can act on right from the notification. Home &amp; Lock Screen widgets and Live Activities keep your next dose a glance away.</p></div>
-    <div class="art r"><div class="phone"><img src="img/today.png" alt="Today schedule with next dose" loading="lazy"></div></div>
-  </div></section>
+  <!-- ── hero ────────────────────────────────────────────── -->
+  <section class="hero" aria-labelledby="hero-h">
+    <div>
+      <p class="micro kicker reveal" style="--d:.12s">Personal build index</p>
+      <h1 id="hero-h" class="reveal" style="--d:.18s">Swanks builds<br>things<span class="tick">.</span></h1>
+      <p class="sub reveal" style="--d:.26s">Independent developer. <strong>Every project I ship docks here</strong> — one card at a time. First one is on the pad now.</p>
+    </div>
 
-  <section><div class="wrap feature rev">
-    <div class="copy r"><p class="eyebrow">Progress</p>
-      <h2>See every trend.</h2>
-      <p>Weight &amp; BMI with a goal line, adherence and streaks, and wellbeing — mood, energy, sleep — each with its own clean chart. Filter from 7 days to all&#8209;time.</p></div>
-    <div class="art r"><div class="phone"><img src="img/progress.png" alt="Progress charts" loading="lazy"></div></div>
-  </div></section>
+    <aside class="readout reveal" style="--d:.34s" aria-label="Index readout">
+      <div class="head">
+        <span class="micro">Readout</span>
+        <span class="micro" style="color:var(--ink-3)">v1.0</span>
+      </div>
+      <div class="row"><span>Launching soon</span><span class="leader" aria-hidden="true"></span><span class="val hot">01</span></div>
+      <div class="row"><span>In development</span><span class="leader" aria-hidden="true"></span><span class="val">02</span></div>
+      <div class="row"><span>Slots open</span><span class="leader" aria-hidden="true"></span><span class="val">01</span></div>
+    </aside>
+  </section>
 
-  <section><div class="wrap feature">
-    <div class="copy r"><p class="eyebrow">Calendar</p>
-      <h2>Your whole plan<br>at a glance.</h2>
-      <p>Month, week, agenda, or day — every scheduled dose in view. Reschedule a single day or log right from the calendar.</p></div>
-    <div class="art r"><div class="phone"><img src="img/calendar.png" alt="Calendar month view" loading="lazy"></div></div>
-  </div></section>
+  <!-- ── projects ────────────────────────────────────────── -->
+  <main class="sect" aria-labelledby="proj-h">
+    <div class="sect-head reveal" style="--d:.4s">
+      <h2 id="proj-h" class="micro" style="color:var(--ink)">Project index</h2>
+      <div class="rule" aria-hidden="true"></div>
+      <span class="micro count">n&nbsp;=&nbsp;03</span>
+    </div>
 
-  <section><div class="wrap feature rev">
-    <div class="copy r"><p class="eyebrow">Peptides</p>
-      <h2>Every peptide,<br>organized.</h2>
-      <p>Unlimited custom peptides with flexible schedules — daily, weekly, every&#8209;N&#8209;days, or several times a day. Color&#8209;coded, with a built&#8209;in reconstitution &amp; dose calculator.</p></div>
-    <div class="art r"><div class="phone"><img src="img/peptides.png" alt="Peptides list" loading="lazy"></div></div>
-  </div></section>
-
-  <section class="band"><div class="wrap">
-    <div class="sec-head r"><p class="eyebrow">Everything you need</p>
-      <h2>Built for the details.</h2>
-      <p>The little things that make tracking effortless — all included, no add-ons.</p></div>
     <div class="grid">
-      <div class="card r"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></div><h3>Smart reminders</h3><p>Act on a dose right from the notification.</p></div>
-      <div class="card r"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg></div><h3>Widgets &amp; Live Activities</h3><p>Your next dose on the Home &amp; Lock Screen.</p></div>
-      <div class="card r"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div><h3>Face ID lock</h3><p>Your records stay private on your device.</p></div>
-      <div class="card r"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 18a5 5 0 0 0-1-9.9A6 6 0 0 0 4 10a4 4 0 0 0 .5 8H17z"/></svg></div><h3>Private cloud sync</h3><p>Your data, synced across your devices.</p></div>
-      <div class="card r"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/></svg></div><h3>PDF &amp; CSV export</h3><p>A clean report of your history, anytime.</p></div>
-      <div class="card r"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg></div><h3>Encrypted backup</h3><p>Passphrase-protected, restore anytime.</p></div>
-      <div class="card r"><div class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.9c0-2.2 1.8-3.3 1.9-3.3-1-1.5-2.6-1.7-3.2-1.7-1.4-.1-2.6.8-3.3.8s-1.8-.8-2.9-.8c-1.5 0-2.9.9-3.6 2.2-1.6 2.7-.4 6.7 1.1 8.9.7 1.1 1.6 2.3 2.8 2.2 1.1 0 1.5-.7 2.9-.7s1.7.7 2.9.7c1.2 0 2-1.1 2.7-2.1.8-1.2 1.2-2.4 1.2-2.5-.1 0-2.3-.9-2.3-3.6z"/></svg></div><h3>Sign in with Apple</h3><p>One tap, no password to remember.</p></div>
-      <div class="card r"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a9 9 0 1 0 9 9c-5 0-9-4-9-9z"/></svg></div><h3>Light &amp; dark</h3><p>Beautiful in any light, follows your system.</p></div>
-    </div>
-  </div></section>
 
-  <section class="privacy"><div class="wrap"><div class="box r">
-    <h2>Private by design.</h2>
-    <p>Your records live in your own account, isolated from other users and encrypted in transit and at rest. No ads. No third-party analytics. Delete everything, anytime.</p>
-  </div></div></section>
-
-  <section class="final"><div class="wrap r">
-    <p class="eyebrow">Track Your Pep</p>
-    <h2>Ready when you are.</h2>
-    <div class="cta" style="margin-top:26px">
-      <a class="badge" href="#" aria-label="Coming soon to the App Store">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.9c0-2.2 1.8-3.3 1.9-3.3-1-1.5-2.6-1.7-3.2-1.7-1.4-.1-2.6.8-3.3.8s-1.8-.8-2.9-.8c-1.5 0-2.9.9-3.6 2.2-1.6 2.7-.4 6.7 1.1 8.9.7 1.1 1.6 2.3 2.8 2.2 1.1 0 1.5-.7 2.9-.7s1.7.7 2.9.7c1.2 0 2-1.1 2.7-2.1.8-1.2 1.2-2.4 1.2-2.5-.1 0-2.3-.9-2.3-3.6zM14.2 6.3c.6-.7 1-1.8.9-2.8-.9 0-1.9.6-2.5 1.3-.5.6-1 1.6-.9 2.6 1 .1 2-.5 2.5-1.1z"/></svg>
-        <span><small>Coming soon on the</small><b>App Store</b></span>
+      <!-- N°001 · TYP — live card. Whole card links to typ/ -->
+      <a class="card card--featured reveal" style="--accent:var(--typ); --d:.46s" href="typ/">
+        <div class="info">
+          <div class="toprow">
+            <span class="micro num">N&deg;001&nbsp;&nbsp;/&nbsp;&nbsp;Health</span>
+            <span class="chip review"><span class="dot" aria-hidden="true"></span>In App Review</span>
+          </div>
+          <div class="title-row">
+            <span class="appmark" aria-hidden="true"><svg viewBox="0 0 96 96"><rect width="96" height="96" rx="24" fill="#0e8a80"/><rect x="40" y="20" width="16" height="11" rx="3.5" fill="#fff"/><rect x="33" y="31" width="30" height="47" rx="10" fill="#fff"/><rect x="45" y="47" width="6" height="17" rx="1.6" fill="#0e8a80"/><rect x="39.5" y="52.7" width="17" height="6" rx="1.6" fill="#0e8a80"/></svg></span>
+            <h3>TYP — Track Your Pep</h3>
+          </div>
+          <p class="tag-line">A clean, private peptide tracker for iPhone. Coming soon to the App Store — site is live now.</p>
+          <div class="tags">
+            <span class="chip">iOS</span>
+            <span class="chip">SwiftUI</span>
+            <span class="chip">Health</span>
+          </div>
+          <span class="cta">Open project site <span class="arrow" aria-hidden="true">&#8594;</span></span>
+        </div>
+        <div class="shotwrap">
+          <div class="shot">
+            <img src="typ/img/today.png" alt="TYP app screenshot: the Today view with adherence stats and the day's peptide dose schedule." width="560" height="1217">
+          </div>
+        </div>
       </a>
-    </div>
-  </div></section>
 
-  <footer><div class="wrap">
-    <div class="foot">
-      <span class="brand"><svg viewBox="0 0 96 96"><rect width="96" height="96" rx="24" fill="#0e8a80"/><rect x="40" y="20" width="16" height="11" rx="3.5" fill="#fff"/><rect x="33" y="31" width="30" height="47" rx="10" fill="#fff"/><rect x="45" y="47" width="6" height="17" rx="1.6" fill="#0e8a80"/><rect x="39.5" y="52.7" width="17" height="6" rx="1.6" fill="#0e8a80"/></svg> TYP</span>
-      <nav><a href="support/">Support</a><a href="support/">Privacy</a></nav>
-    </div>
-    <p class="disc">TYP is a personal record-keeping and reminder tool only, for tracking information you choose to enter. It does not sell, supply, produce, or endorse any peptide, medication, or other substance, and it provides no medical advice, dosage recommendations, or product-safety verification. Many peptides are not approved for human use and may be for research use only, or otherwise regulated, where you live — you are solely responsible for complying with all applicable laws and for your own decisions. Always consult a licensed healthcare professional. You use TYP entirely at your own risk.</p>
-    <p style="margin-top:16px;font-size:13px;opacity:.7">© 2026 TYP · Track Your Pep</p>
-  </div></footer>
+      <!-- N°002 · coming soon -->
+      <article class="card card--soon reveal" style="--d:.54s">
+        <div class="toprow">
+          <span class="micro num">N&deg;002</span>
+          <span class="chip"><span class="dot" aria-hidden="true"></span>In Dev</span>
+        </div>
+        <h3 class="redact">
+          <svg class="lock" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+          <span class="sr">Unannounced project</span>
+          <i style="width:58px" aria-hidden="true"></i><i style="width:34px" aria-hidden="true"></i>
+        </h3>
+        <p class="tag-line">Being built in quiet. Details when it's real.</p>
+        <span class="ghost" aria-hidden="true">02</span>
+      </article>
 
-  <script>
-    const nav=document.getElementById('nav');
-    addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>12),{passive:true});
-    const io=new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.14});
-    document.querySelectorAll('.r:not(.in)').forEach(el=>io.observe(el));
-  </script>
+      <!-- N°003 · coming soon -->
+      <article class="card card--soon reveal" style="--d:.6s">
+        <div class="toprow">
+          <span class="micro num">N&deg;003</span>
+          <span class="chip"><span class="dot" aria-hidden="true"></span>In Dev</span>
+        </div>
+        <h3 class="redact">
+          <svg class="lock" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+          <span class="sr">Unannounced project</span>
+          <i style="width:40px" aria-hidden="true"></i><i style="width:64px" aria-hidden="true"></i>
+        </h3>
+        <p class="tag-line">On the bench. Announced when it ships.</p>
+        <span class="ghost" aria-hidden="true">03</span>
+      </article>
+
+      <!-- N°004 · reserved slot — future projects dock here -->
+      <article class="card card--slot reveal" style="--d:.66s">
+        <span class="plus" aria-hidden="true">+</span>
+        <span class="micro">N&deg;004 — reserved · next build docks here</span>
+      </article>
+
+      <!-- ─────────────────────────────────────────────────────
+           TEMPLATE — copy to add a new live project card:
+
+      <a class="card reveal" style="--accent:#HEXCOLOR; --d:.7s" href="project-path/">
+        <div class="toprow">
+          <span class="micro num">N&deg;004&nbsp;&nbsp;/&nbsp;&nbsp;Category</span>
+          <span class="chip"><span class="dot"></span>Live</span>
+        </div>
+        <h3>Project Name</h3>
+        <p class="tag-line">One-line tagline.</p>
+        <div class="tags"><span class="chip">Tag</span></div>
+      </a>
+      ────────────────────────────────────────────────────── -->
+
+    </div>
+  </main>
+
+  <!-- ── footer ──────────────────────────────────────────── -->
+  <footer class="reveal" style="--d:.72s">
+    <span class="micro">&copy; <span id="yy">2026</span> Swanks</span>
+    <span class="micro" style="color:var(--ink-3)">No trackers &middot; no cookies &middot; hand-built</span>
+    <span class="micro"><a href="https://github.com/itsSwanks" rel="noopener">github.com/itsSwanks&nbsp;&#8599;</a></span>
+  </footer>
+
+</div>
+
+<div class="noise" aria-hidden="true"></div>
+
+<script>
+/* UTC clock — control-room heartbeat */
+(function(){
+  var el = document.getElementById('utc');
+  if(!el) return;
+  function p(n){ return String(n).padStart(2,'0'); }
+  function tick(){
+    var d = new Date();
+    el.textContent = p(d.getUTCHours())+':'+p(d.getUTCMinutes())+':'+p(d.getUTCSeconds())+' UTC';
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
+document.getElementById('yy').textContent = new Date().getFullYear();
+</script>
 </body>
 </html>
