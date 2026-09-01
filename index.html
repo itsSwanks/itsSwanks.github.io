@@ -5,8 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="The project hub of Swanks — apps and experiments, indexed in one place.">
 <meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#101012">
 <title>Swanks — Project Index</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23151517'/%3E%3Ccircle cx='32' cy='32' r='11' fill='%23f2a33c'/%3E%3C/svg%3E">
+<script>
+try{
+  var savedTheme=localStorage.getItem('swanky-theme');
+  if(savedTheme==='light'||savedTheme==='dark') document.documentElement.dataset.theme=savedTheme;
+}catch(e){}
+</script>
 <style>
 /* ============================================================
    SWANKS — PROJECT INDEX
@@ -42,8 +49,29 @@
   --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
   --sans: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", sans-serif;
 }
+:root[data-theme="light"]{
+  --bg:        #f3f0e8;
+  --bg-2:      #efebe1;
+  --card:      #fbf9f4;
+  --card-edge: rgba(255,255,255,.6);
+  --ink:       #201e1a;
+  --ink-2:     #5d5a52;
+  --ink-3:     #8f8b80;
+  --line:      #d8d2c3;
+  --line-2:    #e4dfd2;
+  --amber:     #935a00;
+  --amber-dim: rgba(147,90,0,.12);
+  --glow:      rgba(206,132,26,.13);
+  --gridline:  rgba(46,36,16,.055);
+  --typ:       #0e8a80;
+  --typ-soft:  rgba(14,138,128,.11);
+  --shot-glow: rgba(14,138,128,.18);
+  --noise-op:  .06;
+  color-scheme:light;
+}
+:root[data-theme="dark"]{ color-scheme:dark; }
 @media (prefers-color-scheme: light){
-  :root{
+  :root:not([data-theme]){
     --bg:        #f3f0e8;
     --bg-2:      #efebe1;
     --card:      #fbf9f4;
@@ -61,6 +89,7 @@
     --typ-soft:  rgba(14,138,128,.11);
     --shot-glow: rgba(14,138,128,.18);
     --noise-op:  .06;
+    color-scheme:light;
   }
 }
 
@@ -157,6 +186,17 @@ img{ max-width:100%; }
 }
 .topbar a:hover{ color:var(--amber); }
 #utc{ font-variant-numeric:tabular-nums; color:var(--ink-3); }
+.theme-toggle{
+  display:inline-flex; align-items:center; gap:7px;
+  min-height:30px; padding:5px 10px;
+  border:1px solid var(--line); border-radius:999px;
+  background:var(--card); color:var(--ink-2);
+  font-family:var(--mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase;
+  cursor:pointer; box-shadow:inset 0 1px 0 var(--card-edge);
+  transition:color .18s ease, border-color .18s ease, transform .18s ease;
+}
+.theme-toggle:hover{ color:var(--amber); border-color:var(--amber); transform:translateY(-1px); }
+.theme-icon{ width:14px; font-size:15px; line-height:1; text-align:center; }
 
 /* ---------- hero ---------- */
 .hero{
@@ -410,6 +450,8 @@ footer .micro a:hover{ color:var(--amber); }
   .shot{ height:230px; max-width:260px; margin:0 auto; }
   .topbar nav{ gap:14px; }
   #utc{ display:none; }
+  #theme-label{ display:none; }
+  .theme-toggle{ width:30px; padding:5px; }
 }
 
 /* ---------- reduced motion ---------- */
@@ -438,6 +480,10 @@ footer .micro a:hover{ color:var(--amber); }
     </div>
     <nav aria-label="Site">
       <span class="micro" id="utc" aria-hidden="true">--:--:-- UTC</span>
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch color theme">
+        <span class="theme-icon" id="theme-icon" aria-hidden="true">&#9728;</span>
+        <span id="theme-label">Light</span>
+      </button>
       <a href="https://github.com/itsSwanks" rel="noopener">GitHub&nbsp;&#8599;</a>
     </nav>
   </header>
@@ -589,6 +635,33 @@ footer .micro a:hover{ color:var(--amber); }
 <div class="noise" aria-hidden="true"></div>
 
 <script>
+/* Theme switcher — follows the system until a visitor chooses. */
+(function(){
+  var root=document.documentElement;
+  var button=document.getElementById('theme-toggle');
+  var icon=document.getElementById('theme-icon');
+  var label=document.getElementById('theme-label');
+  var system=window.matchMedia('(prefers-color-scheme: light)');
+  var themeMeta=document.querySelector('meta[name="theme-color"]');
+  function current(){ return root.dataset.theme||(system.matches?'light':'dark'); }
+  function render(){
+    var light=current()==='light';
+    icon.textContent=light?'☾':'☼';
+    label.textContent=light?'Dark':'Light';
+    button.setAttribute('aria-label','Switch to '+(light?'dark':'light')+' mode');
+    button.setAttribute('aria-pressed',String(light));
+    if(themeMeta) themeMeta.setAttribute('content',light?'#f3f0e8':'#101012');
+  }
+  button.addEventListener('click',function(){
+    var next=current()==='light'?'dark':'light';
+    root.dataset.theme=next;
+    try{ localStorage.setItem('swanky-theme',next); }catch(e){}
+    render();
+  });
+  if(system.addEventListener) system.addEventListener('change',function(){ if(!root.dataset.theme) render(); });
+  render();
+})();
+
 /* UTC clock — control-room heartbeat */
 (function(){
   var el = document.getElementById('utc');
