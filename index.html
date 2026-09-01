@@ -417,6 +417,14 @@ a.card:hover::before, a.card:focus-visible::before{ width:calc(100% - 44px); }
   font-family:var(--mono); font-size:11.5px; letter-spacing:.16em; text-transform:uppercase;
   color:var(--accent); font-weight:600;
 }
+.card--product{ min-height:220px; }
+.card--product .title-row{ margin-bottom:2px; }
+.card--product .cta{
+  margin-top:auto; padding-top:20px;
+  display:flex; align-items:center; gap:9px;
+  font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--accent); font-weight:600;
+}
 .cta .arrow{ transition:transform .28s cubic-bezier(.22,1,.36,1); }
 a.card:hover .cta .arrow, a.card:focus-visible .cta .arrow{ transform:translateX(5px); }
 
@@ -562,8 +570,9 @@ footer .micro a:hover{ color:var(--amber); }
         <span class="micro" style="color:var(--ink-3)">v1.0</span>
       </div>
       <div class="row"><span>On the App Store</span><span class="leader" aria-hidden="true"></span><span class="val hot">01</span></div>
+      <div class="row"><span>Mac releases</span><span class="leader" aria-hidden="true"></span><span class="val hot">01</span></div>
       <div class="row"><span>In review</span><span class="leader" aria-hidden="true"></span><span class="val">01</span></div>
-      <div class="row"><span>In development</span><span class="leader" aria-hidden="true"></span><span class="val">02</span></div>
+      <div class="row"><span>In development</span><span class="leader" aria-hidden="true"></span><span class="val">01</span></div>
       <div class="row"><span>Slots open</span><span class="leader" aria-hidden="true"></span><span class="val">01</span></div>
     </aside>
   </section>
@@ -604,20 +613,33 @@ footer .micro a:hover{ color:var(--amber); }
         </div>
       </a>
 
-      <!-- N°003 · coming soon (right column, row 1) -->
-      <article class="card card--soon reveal" style="--d:.52s">
+      <!-- N°003 · Tokenly — available for macOS -->
+      <a class="card card--product reveal" style="--accent:#54a8bc; --d:.52s" href="https://tokenly.site" rel="noopener">
         <div class="toprow">
-          <span class="micro num">N&deg;003</span>
-          <span class="chip"><span class="dot" aria-hidden="true"></span>In Dev</span>
+          <span class="micro num">N&deg;003&nbsp;&nbsp;/&nbsp;&nbsp;macOS</span>
+          <span class="chip live"><span class="dot" aria-hidden="true"></span>Available</span>
         </div>
-        <h3 class="redact">
-          <svg class="lock" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
-          <span class="sr">Unannounced project</span>
-          <i style="width:58px" aria-hidden="true"></i><i style="width:34px" aria-hidden="true"></i>
-        </h3>
-        <p class="tag-line">Being built in quiet. Details when it's real.</p>
-        <span class="ghost" aria-hidden="true">03</span>
-      </article>
+        <div class="title-row">
+          <span class="appmark" aria-hidden="true">
+            <svg viewBox="0 0 128 128">
+              <defs>
+                <linearGradient id="tokenly-aur" x1="0" y1="0" x2=".55" y2="1"><stop offset="0" stop-color="#8fd0de"/><stop offset=".45" stop-color="#3d97ad"/><stop offset=".8" stop-color="#186079"/><stop offset="1" stop-color="#0d3c54"/></linearGradient>
+                <radialGradient id="tokenly-vig" cx=".28" cy="-.06" r="1.1"><stop offset="0" stop-color="#fff" stop-opacity=".28"/><stop offset=".52" stop-color="#fff" stop-opacity="0"/></radialGradient>
+                <clipPath id="tokenly-tile"><rect width="128" height="128" rx="29"/></clipPath>
+              </defs>
+              <g clip-path="url(#tokenly-tile)"><rect width="128" height="128" fill="url(#tokenly-aur)"/><rect width="128" height="128" fill="url(#tokenly-vig)"/><rect x="16" y="16" width="96" height="96" rx="20" fill="#fff" fill-opacity=".13" stroke="#fff" stroke-opacity=".34"/><rect x="37.1" y="32" width="53.8" height="64" rx="16" fill="none" stroke="#fff" stroke-opacity=".92" stroke-width="6.4"/><rect x="83.8" y="47.4" width="14.1" height="33.3" rx="7" fill="#fff" fill-opacity=".92"/><circle cx="90.9" cy="56.1" r="2.6" fill="#0f9d3f"/><circle cx="90.9" cy="64" r="2.6" fill="#b3a900"/><circle cx="90.9" cy="71.9" r="2.6" fill="#c9500f"/></g>
+            </svg>
+          </span>
+          <h3>Tokenly</h3>
+        </div>
+        <p class="tag-line">Live Claude, OpenAI and Gemini usage limits, resting quietly on the edge of your Mac.</p>
+        <div class="tags">
+          <span class="chip">macOS</span>
+          <span class="chip">SwiftUI</span>
+          <span class="chip">AI Usage</span>
+        </div>
+        <span class="cta">Open Tokenly <span class="arrow" aria-hidden="true">&#8594;</span></span>
+      </a>
 
       <!-- N°002 · Receira — LIVE on the App Store. Whole card links to the store listing -->
       <a class="card card--featured reveal" style="--accent:#14a08f; --d:.58s" href="https://apps.apple.com/app/id6774353903" rel="noopener">
