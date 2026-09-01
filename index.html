@@ -1,607 +1,105 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="The project hub of Swanks — apps and experiments, indexed in one place.">
-<meta name="color-scheme" content="dark light">
-<title>Swanks — Project Index</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23151517'/%3E%3Ccircle cx='32' cy='32' r='11' fill='%23f2a33c'/%3E%3C/svg%3E">
-<style>
-/* ============================================================
-   SWANKS — PROJECT INDEX
-   Aesthetic: instrument-ledger / mission-control.
-   Hub identity: warm graphite + signal amber + mono microtype.
-   Each project card carries its OWN accent via --accent.
-   ============================================================ */
-
-/* ---------- tokens ---------- */
-:root{
-  color-scheme: dark light;
-
-  /* dark (default) */
-  --bg:        #101012;
-  --bg-2:      #151518;
-  --card:      #17171a;
-  --card-edge: rgba(255,255,255,.035);
-  --ink:       #ecebe6;
-  --ink-2:     #a9a79f;
-  --ink-3:     #71706a;
-  --line:      #2a2a2e;
-  --line-2:    #202023;
-  --amber:     #f2a33c;
-  --amber-dim: rgba(242,163,60,.14);
-  --glow:      rgba(242,140,40,.09);
-  --gridline:  rgba(255,255,255,.033);
-  --typ:       #2ec9ba;               /* TYP project accent, dark-safe */
-  --typ-soft:  rgba(46,201,186,.14);
-  --shot-glow: rgba(27,169,162,.22);
-  --noise-op:  .05;
-
-  /* type */
-  --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
-  --sans: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", sans-serif;
-}
-@media (prefers-color-scheme: light){
-  :root{
-    --bg:        #f3f0e8;
-    --bg-2:      #efebe1;
-    --card:      #fbf9f4;
-    --card-edge: rgba(255,255,255,.6);
-    --ink:       #201e1a;
-    --ink-2:     #5d5a52;
-    --ink-3:     #8f8b80;
-    --line:      #d8d2c3;
-    --line-2:    #e4dfd2;
-    --amber:     #935a00;
-    --amber-dim: rgba(147,90,0,.12);
-    --glow:      rgba(206,132,26,.13);
-    --gridline:  rgba(46,36,16,.055);
-    --typ:       #0e8a80;
-    --typ-soft:  rgba(14,138,128,.11);
-    --shot-glow: rgba(14,138,128,.18);
-    --noise-op:  .06;
-  }
-}
-
-/* ---------- base ---------- */
-*{ box-sizing:border-box; margin:0; }
-html{ scroll-behavior:smooth; }
-body{
-  background:var(--bg);
-  color:var(--ink);
-  font-family:var(--sans);
-  font-size:15.5px;
-  line-height:1.6;
-  -webkit-font-smoothing:antialiased;
-  overflow-x:hidden;
-  min-height:100svh;
-}
-::selection{ background:var(--amber); color:#131313; }
-a{ color:inherit; }
-:focus-visible{ outline:2px solid var(--amber); outline-offset:3px; border-radius:4px; }
-img{ max-width:100%; }
-.sr{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
-
-/* ---------- ambient layers ---------- */
-.gridbg, .aurora, .noise{ position:fixed; inset:0; pointer-events:none; }
-.gridbg{
-  background-image:
-    linear-gradient(to right,  var(--gridline) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--gridline) 1px, transparent 1px);
-  background-size:64px 64px;
-  -webkit-mask-image:radial-gradient(120% 75% at 50% 0%, #000 25%, transparent 78%);
-          mask-image:radial-gradient(120% 75% at 50% 0%, #000 25%, transparent 78%);
-  z-index:0;
-}
-.aurora{
-  inset:-25%;
-  background:
-    radial-gradient(640px 420px at 22% 12%, var(--glow), transparent 62%),
-    radial-gradient(520px 380px at 88% 78%, var(--typ-soft), transparent 65%);
-  animation:drift 30s ease-in-out infinite alternate;
-  z-index:0;
-}
-@keyframes drift{
-  from{ transform:translate3d(0,0,0) scale(1); }
-  to  { transform:translate3d(4%,3%,0) scale(1.07); }
-}
-.noise{
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
-  opacity:var(--noise-op);
-  mix-blend-mode:overlay;
-  z-index:3;
-}
-
-/* ---------- shell ---------- */
-.shell{
-  position:relative; z-index:1;
-  max-width:1120px;
-  margin:0 auto;
-  padding:0 clamp(20px, 4vw, 44px) 0;
-}
-
-/* ---------- micro type ---------- */
-.micro{
-  font-family:var(--mono);
-  font-size:11px;
-  letter-spacing:.16em;
-  text-transform:uppercase;
-  color:var(--ink-2);
-}
-.micro b{ color:var(--amber); font-weight:600; }
-
-/* ---------- top bar ---------- */
-.topbar{
-  display:flex; align-items:center; justify-content:space-between; gap:16px;
-  padding:18px 0 16px;
-  border-bottom:1px solid var(--line-2);
-}
-.topbar .brand{ display:flex; align-items:center; gap:10px; }
-.beacon{
-  width:8px; height:8px; border-radius:50%;
-  background:var(--amber);
-  box-shadow:0 0 0 0 var(--amber-dim);
-  animation:pulse 2.6s cubic-bezier(.4,0,.2,1) infinite;
-}
-@keyframes pulse{
-  0%  { box-shadow:0 0 0 0   color-mix(in srgb, var(--amber) 45%, transparent); }
-  70% { box-shadow:0 0 0 9px transparent; }
-  100%{ box-shadow:0 0 0 0   transparent; }
-}
-.topbar nav{ display:flex; align-items:center; gap:20px; }
-.topbar a{
-  font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase;
-  color:var(--ink-2); text-decoration:none;
-  transition:color .18s ease;
-}
-.topbar a:hover{ color:var(--amber); }
-#utc{ font-variant-numeric:tabular-nums; color:var(--ink-3); }
-
-/* ---------- hero ---------- */
-.hero{
-  display:grid;
-  grid-template-columns:1fr minmax(230px, 300px);
-  gap:clamp(28px, 5vw, 64px);
-  align-items:end;
-  padding:clamp(56px, 9vh, 96px) 0 clamp(40px, 6vh, 64px);
-}
-.hero .kicker{ margin-bottom:22px; color:var(--amber); }
-.hero h1{
-  font-size:clamp(3.3rem, 7.6vw, 5.4rem);
-  font-weight:800;
-  letter-spacing:-.045em;
-  line-height:.98;
-}
-.hero h1 .tick{ color:var(--amber); }
-.hero .sub{
-  margin-top:20px;
-  max-width:36ch;
-  font-size:clamp(1rem, 1.4vw, 1.1rem);
-  color:var(--ink-2);
-  text-wrap:pretty;
-}
-.hero .sub strong{ color:var(--ink); font-weight:600; }
-
-/* readout panel */
-.readout{
-  border:1px solid var(--line);
-  border-radius:14px;
-  background:color-mix(in srgb, var(--card) 72%, transparent);
-  backdrop-filter:blur(6px);
-  padding:16px 18px 14px;
-  box-shadow:inset 0 1px 0 var(--card-edge);
-}
-.readout .head{
-  display:flex; justify-content:space-between; align-items:center;
-  padding-bottom:10px; margin-bottom:6px;
-  border-bottom:1px solid var(--line-2);
-}
-.readout .row{
-  display:flex; align-items:baseline; gap:10px;
-  font-family:var(--mono); font-size:12px; letter-spacing:.08em;
-  color:var(--ink-2);
-  padding:7px 0;
-}
-.readout .row .leader{ flex:1; border-bottom:1px dotted var(--line); transform:translateY(-4px); }
-.readout .row .val{ color:var(--ink); font-weight:600; font-variant-numeric:tabular-nums; }
-.readout .row .val.hot{ color:var(--amber); }
-
-/* ---------- section head ---------- */
-.sect{ padding:8px 0 96px; }
-.sect-head{
-  display:flex; align-items:center; gap:16px;
-  margin-bottom:22px;
-}
-.sect-head .rule{ flex:1; height:1px; background:var(--line-2); position:relative; }
-.sect-head .rule::before,
-.sect-head .rule::after{
-  content:"+";
-  position:absolute; top:50%;
-  transform:translateY(-52%);
-  font-family:var(--mono); font-size:11px; color:var(--ink-3);
-}
-.sect-head .rule::before{ left:-2px; }
-.sect-head .rule::after{ right:-2px; }
-.sect-head .count{ color:var(--ink-3); }
-
-/* ============================================================
-   CARD SYSTEM
-   To add a project: copy the <a class="card"> template at the
-   bottom of the grid markup, set --accent + --d (reveal delay),
-   bump the N° index, done.
-   ============================================================ */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(6, 1fr);
-  gap:14px;
-}
-.card{
-  --accent: var(--amber);
-  position:relative;
-  grid-column:span 2;
-  display:flex; flex-direction:column;
-  border:1px solid var(--line);
-  border-radius:18px;
-  background:var(--card);
-  box-shadow:inset 0 1px 0 var(--card-edge);
-  padding:20px 22px 22px;
-  overflow:hidden;
-  text-decoration:none;
-  transition:transform .28s cubic-bezier(.22,1,.36,1),
-             border-color .28s ease,
-             box-shadow .28s ease;
-}
-/* accent tab: short top hairline that extends on hover */
-.card::before{
-  content:"";
-  position:absolute; top:0; left:22px;
-  width:44px; height:2px;
-  background:var(--accent);
-  border-radius:0 0 2px 2px;
-  transition:width .38s cubic-bezier(.22,1,.36,1);
-}
-a.card:hover, a.card:focus-visible{
-  transform:translateY(-4px);
-  border-color:color-mix(in srgb, var(--accent) 45%, var(--line));
-  box-shadow:inset 0 1px 0 var(--card-edge),
-             0 18px 44px -18px color-mix(in srgb, var(--accent) 35%, transparent);
-}
-a.card:hover::before, a.card:focus-visible::before{ width:calc(100% - 44px); }
-
-.card .toprow{
-  display:flex; justify-content:space-between; align-items:center; gap:10px;
-  margin-bottom:18px;
-}
-.card .num{ color:var(--ink-3); }
-.chip{
-  display:inline-flex; align-items:center; gap:7px;
-  font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
-  color:var(--ink-2);
-  border:1px solid var(--line);
-  border-radius:999px;
-  padding:4px 11px;
-  white-space:nowrap;
-}
-.chip .dot{ width:6px; height:6px; border-radius:50%; background:var(--ink-3); flex:none; }
-.chip.review{ color:var(--amber); border-color:color-mix(in srgb, var(--amber) 35%, var(--line)); }
-.chip.review .dot{ background:var(--amber); animation:pulse 2.6s cubic-bezier(.4,0,.2,1) infinite; }
-.chip.live{ color:#2f9e5e; border-color:color-mix(in srgb, #2f9e5e 42%, var(--line)); }
-.chip.live .dot{ background:#2f9e5e; box-shadow:0 0 0 3px color-mix(in srgb, #2f9e5e 22%, transparent); }
-
-.card h3{
-  font-size:22px; font-weight:700; letter-spacing:-.015em; line-height:1.25;
-  color:var(--ink);
-}
-.card .tag-line{ color:var(--ink-2); margin-top:6px; max-width:34ch; text-wrap:pretty; }
-.tags{ display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
-.tags .chip{ padding:3px 10px; }
-
-/* ---- featured card (TYP) ---- */
-.card--featured{
-  grid-column:span 4;
-  display:grid;
-  grid-template-columns:1fr 236px;
-  gap:26px;
-  padding:22px 26px 0 26px;
-  min-height:340px;
-}
-.card--featured .info{ display:flex; flex-direction:column; padding-bottom:24px; }
-.card--featured .toprow{ margin-bottom:20px; }
-.title-row{ display:flex; align-items:center; gap:14px; }
-.appmark{ width:46px; height:46px; flex:none; filter:drop-shadow(0 4px 10px var(--shot-glow)); }
-.appmark svg{ display:block; width:100%; height:100%; }
-.card--featured .cta{
-  margin-top:auto; padding-top:22px;
-  display:flex; align-items:center; gap:9px;
-  font-family:var(--mono); font-size:11.5px; letter-spacing:.16em; text-transform:uppercase;
-  color:var(--accent); font-weight:600;
-}
-.cta .arrow{ transition:transform .28s cubic-bezier(.22,1,.36,1); }
-a.card:hover .cta .arrow, a.card:focus-visible .cta .arrow{ transform:translateX(5px); }
-
-/* phone screenshot, docked into the card's bottom edge */
-.shotwrap{ position:relative; align-self:end; }
-.shotwrap::before{
-  content:"";
-  position:absolute; inset:-8% -14%;
-  background:radial-gradient(60% 55% at 50% 55%, color-mix(in srgb, var(--accent) 26%, transparent), transparent 70%);
-}
-.shot{
-  position:relative;
-  width:100%;
-  height:296px;
-  border:1px solid color-mix(in srgb, var(--accent) 28%, var(--line));
-  border-bottom:0;
-  border-radius:26px 26px 0 0;
-  overflow:hidden;
-  background:#f4f4f6;
-  transform:rotate(1.6deg) translateY(6px);
-  transform-origin:bottom center;
-  box-shadow:0 -8px 40px -14px color-mix(in srgb, var(--accent) 34%, transparent);
-  transition:transform .38s cubic-bezier(.22,1,.36,1);
-}
-a.card:hover .shot, a.card:focus-visible .shot{ transform:rotate(.4deg) translateY(2px); }
-.shot img{ display:block; width:100%; height:100%; object-fit:cover; object-position:top center; }
-
-/* ---- coming-soon cards ---- */
-.card--soon{ min-height:196px; cursor:default; }
-.card--soon::before{ background:var(--ink-3); opacity:.5; }
-.card--soon .ghost{
-  position:absolute; right:6px; bottom:-26px;
-  font-size:104px; font-weight:800; letter-spacing:-.06em;
-  color:var(--ink); opacity:.045;
-  font-variant-numeric:tabular-nums;
-  pointer-events:none; user-select:none;
-}
-.card--soon .tag-line{ font-size:14px; }
-.redact{ display:inline-flex; gap:6px; align-items:center; }
-.redact i{
-  display:inline-block; height:14px; border-radius:4px;
-  background:var(--ink-3); opacity:.38;
-}
-.lock{ color:var(--ink-3); flex:none; }
-
-/* ---- reserved slot ---- */
-.card--slot{
-  grid-column:span 4;
-  min-height:150px;
-  border-style:dashed;
-  background:transparent;
-  box-shadow:none;
-  align-items:center; justify-content:center; gap:10px;
-  color:var(--ink-3);
-}
-.card--slot::before{ display:none; }
-.card--slot .plus{ font-family:var(--mono); font-size:22px; line-height:1; }
-
-/* ---------- footer ---------- */
-footer{
-  border-top:1px solid var(--line-2);
-  padding:24px 0 40px;
-  display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap;
-}
-footer .micro a{ color:var(--ink-2); text-decoration:none; transition:color .18s ease; }
-footer .micro a:hover{ color:var(--amber); }
-
-/* ---------- orchestrated reveal ---------- */
-.reveal{
-  opacity:0;
-  animation:rise .85s cubic-bezier(.22,1,.36,1) forwards;
-  animation-delay:var(--d, 0s);
-}
-@keyframes rise{
-  from{ opacity:0; transform:translateY(18px); }
-  to  { opacity:1; transform:translateY(0); }
-}
-
-/* ---------- responsive ---------- */
-@media (max-width: 920px){
-  .hero{ grid-template-columns:1fr; align-items:start; }
-  .readout{ max-width:360px; }
-  .card--featured{ grid-column:span 6; }
-  .card{ grid-column:span 3; }
-  .card--slot{ grid-column:span 6; }
-}
-@media (max-width: 640px){
-  .card, .card--featured, .card--slot{ grid-column:span 6; }
-  .card--featured{ grid-template-columns:1fr; padding:20px 22px 0; min-height:0; }
-  .shotwrap{ margin-top:22px; }
-  .shot{ height:230px; max-width:260px; margin:0 auto; }
-  .topbar nav{ gap:14px; }
-  #utc{ display:none; }
-}
-
-/* ---------- reduced motion ---------- */
-@media (prefers-reduced-motion: reduce){
-  html{ scroll-behavior:auto; }
-  .reveal{ animation:none; opacity:1; }
-  .aurora, .beacon, .chip.review .dot{ animation:none; }
-  .card, .cta .arrow, .shot, .card::before{ transition:none; }
-  a.card:hover, a.card:focus-visible{ transform:none; }
-  a.card:hover .shot, a.card:focus-visible .shot{ transform:rotate(1.6deg) translateY(6px); }
-}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Swanky builds thoughtful apps and small experiments for Apple platforms.">
+  <meta name="theme-color" content="#f3f0e8">
+  <title>Swanky — Apps &amp; Experiments</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23161512'/%3E%3Cpath d='M18 20c4-5 22-5 27 1-7 2-9 4-8 7 1 4 9 3 9 10 0 9-20 10-28 4 7-2 11-4 10-8-1-3-10-2-10-9 0-2 0-3 0-5z' fill='%23ffcf4a'/%3E%3C/svg%3E">
+  <style>
+    :root{
+      --paper:#f3f0e8;--card:#fffdf8;--ink:#171613;--muted:#706d65;--line:#d9d4c8;
+      --accent:#ffcf4a;--accent-soft:#fff0ad;--mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+      --sans:"Avenir Next",Avenir,"Helvetica Neue",Arial,sans-serif;color-scheme:light;
+    }
+    *{box-sizing:border-box}html{scroll-behavior:smooth}
+    body{margin:0;min-height:100vh;color:var(--ink);background:var(--paper);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+    body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.44;background-image:radial-gradient(circle,rgba(23,22,19,.2) 1px,transparent 1.2px);background-size:20px 20px;mask-image:linear-gradient(to bottom,#000 0%,rgba(0,0,0,.55) 66%,transparent 100%)}
+    a{color:inherit}img{display:block;max-width:100%}::selection{background:var(--accent);color:var(--ink)}
+    :focus-visible{outline:3px solid var(--accent);outline-offset:4px}
+    .page{width:min(1240px,calc(100% - 40px));margin:0 auto;padding:54px 0 40px}
+    .layout{display:grid;grid-template-columns:360px minmax(0,1fr);gap:32px;align-items:start}
+    .profile{position:sticky;top:48px}
+    .sticker{background:rgba(255,253,248,.96);border:1px solid var(--line);border-radius:18px;box-shadow:0 2px 0 rgba(23,22,19,.05),0 18px 48px rgba(47,40,24,.06)}
+    .profile-card{padding:28px}
+    .avatar{width:88px;height:88px;border-radius:50%;display:grid;place-items:center;background:var(--ink);color:var(--accent);font-size:34px;font-weight:800;letter-spacing:-.08em;border:1px solid var(--ink);box-shadow:inset 0 0 0 5px #292721}
+    h1{margin:24px 0 0;font-size:32px;line-height:1;font-weight:750;letter-spacing:-.04em}
+    h1 span{color:var(--muted);font-weight:450;font-size:.72em;letter-spacing:-.02em}
+    .bio{margin:15px 0 0;font:13.5px/1.72 var(--mono);color:#514f49}.bio strong{color:var(--ink)}
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:24px}
+    .button,.project-link{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:10px 15px;font-size:14px;font-weight:650;text-decoration:none;background:transparent;transition:transform .18s ease,background .18s ease,box-shadow .18s ease}
+    .button.primary,.project-link{background:var(--ink);border-color:var(--ink);color:#fffdf8}.button:hover,.project-link:hover{transform:translateY(-2px);box-shadow:0 5px 0 var(--accent)}
+    .socials{display:flex;align-items:center;gap:8px;border-top:1px solid var(--line);margin-top:24px;padding-top:18px}
+    .socials a{font:11px/1 var(--mono);text-transform:uppercase;letter-spacing:.1em;text-decoration:none;color:var(--muted);padding:9px 10px;border-radius:999px}.socials a:hover{background:var(--paper);color:var(--ink)}
+    .tiny{margin:18px 3px 0;font:10px/1.6 var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
+    .content{display:flex;min-width:0;flex-direction:column;gap:36px}.section-title{display:flex;align-items:center;gap:9px;margin:0 0 12px}
+    .section-title h2{margin:0;font:11px/1 var(--mono);color:var(--muted);letter-spacing:.14em;text-transform:uppercase}.section-title .count{font:10px/1 var(--mono);background:var(--accent);padding:4px 7px;border-radius:999px}
+    .projects{display:flex;flex-direction:column;gap:16px}.project{padding:22px 24px;overflow:hidden;transition:transform .2s ease,box-shadow .2s ease}
+    .project:hover{transform:translateY(-2px);box-shadow:0 3px 0 rgba(23,22,19,.06),0 20px 52px rgba(47,40,24,.1)}
+    .project-head{display:flex;align-items:center;gap:18px}.app-icon{width:58px;height:58px;flex:0 0 58px;border-radius:17px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}.app-icon svg{width:100%;height:100%}
+    .project-copy{min-width:0;flex:1}.title-line{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.title-line h3{margin:0;font-size:clamp(23px,3vw,29px);line-height:1.1;letter-spacing:-.035em}
+    .badge{padding:5px 8px;border-radius:999px;background:var(--accent-soft);font:9px/1 var(--mono);text-transform:uppercase;letter-spacing:.1em;white-space:nowrap}
+    .project-copy p{margin:7px 0 0;color:var(--muted);font:13px/1.55 var(--mono)}.project-link{flex:0 0 auto;padding:9px 15px}
+    .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}.gallery img{width:100%;aspect-ratio:1/1;object-fit:cover;object-position:top center;border:1px solid var(--line);border-radius:12px;background:#e8e4dc}
+    .gallery.phone img{object-position:center 12%;background:linear-gradient(145deg,#d9faf5,#c6eee8);padding:14px 20px 0}.gallery.single{grid-template-columns:minmax(0,320px)}.gallery.single img{object-position:center 9%;background:linear-gradient(145deg,#dbf3ee,#bddfd9);padding:14px 18px 0}
+    .lab-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.lab-card{padding:22px 24px;min-height:160px;position:relative;overflow:hidden}.lab-card::after{content:attr(data-number);position:absolute;right:14px;bottom:-25px;color:rgba(23,22,19,.045);font-size:108px;font-weight:800;line-height:1}
+    .lab-top{display:flex;justify-content:space-between;gap:12px;align-items:center}.lab-card h3{margin:28px 0 7px;font-size:21px;letter-spacing:-.03em}.lab-card p{margin:0;max-width:30ch;color:var(--muted);font:12px/1.55 var(--mono)}
+    .status{font:9px/1 var(--mono);text-transform:uppercase;letter-spacing:.11em;border:1px solid var(--line);border-radius:999px;padding:6px 8px}.status::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:#e29a28;margin-right:6px;box-shadow:0 0 0 3px rgba(226,154,40,.15)}
+    footer{display:flex;justify-content:space-between;gap:20px;width:min(1240px,calc(100% - 40px));margin:0 auto;padding:20px 0 34px;border-top:1px solid var(--line);font:10px/1.5 var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+    .rise{opacity:0;transform:translateY(14px);animation:rise .55s cubic-bezier(.22,.8,.3,1) forwards;animation-delay:var(--delay,0s)}@keyframes rise{to{opacity:1;transform:none}}
+    @media(max-width:900px){.page{padding-top:30px}.layout{grid-template-columns:1fr}.profile{position:static}.profile-card{display:grid;grid-template-columns:auto 1fr;column-gap:20px}.profile-card .avatar{grid-row:1/3}.profile-card h1{margin-top:8px}.profile-card .bio{margin-top:8px}.actions,.socials{grid-column:1/-1}.tiny{display:none}}
+    @media(max-width:620px){.page{width:min(100% - 24px,1240px);padding-top:12px}.profile-card,.project,.lab-card{border-radius:14px}.profile-card{padding:20px;display:block}.profile-card h1{margin-top:20px}.actions{grid-template-columns:1fr}.project{padding:19px}.project-head{align-items:flex-start;flex-wrap:wrap}.project-copy{min-width:calc(100% - 76px)}.project-link{margin-left:76px}.gallery{grid-template-columns:repeat(3,1fr);gap:7px}.gallery.phone img,.gallery.single img{padding:7px 7px 0}.lab-grid{grid-template-columns:1fr}footer{width:calc(100% - 24px);flex-direction:column;gap:7px}}
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}.rise{opacity:1;transform:none;animation:none}.project,.button,.project-link{transition:none}}
+  </style>
 </head>
 <body>
-
-<div class="gridbg" aria-hidden="true"></div>
-<div class="aurora" aria-hidden="true"></div>
-
-<div class="shell">
-
-  <!-- ── top bar ─────────────────────────────────────────── -->
-  <header class="topbar reveal" style="--d:.05s">
-    <div class="brand">
-      <span class="beacon" aria-hidden="true"></span>
-      <span class="micro"><b>Swanks</b> — project index</span>
-    </div>
-    <nav aria-label="Site">
-      <span class="micro" id="utc" aria-hidden="true">--:--:-- UTC</span>
-      <a href="https://github.com/itsSwanks" rel="noopener">GitHub&nbsp;&#8599;</a>
-    </nav>
-  </header>
-
-  <!-- ── hero ────────────────────────────────────────────── -->
-  <section class="hero" aria-labelledby="hero-h">
-    <div>
-      <p class="micro kicker reveal" style="--d:.12s">Personal build index</p>
-      <h1 id="hero-h" class="reveal" style="--d:.18s">Swanky builds<br>things<span class="tick">.</span></h1>
-      <p class="sub reveal" style="--d:.26s">Independent developer. <strong>Every project I ship docks here</strong> — one card at a time. One's on the App Store, one's on the pad.</p>
-    </div>
-
-    <aside class="readout reveal" style="--d:.34s" aria-label="Index readout">
-      <div class="head">
-        <span class="micro">Readout</span>
-        <span class="micro" style="color:var(--ink-3)">v1.0</span>
+  <main class="page"><div class="layout">
+    <aside class="profile rise" style="--delay:.04s">
+      <div class="sticker profile-card">
+        <div class="avatar" aria-hidden="true">S.</div>
+        <h1>Swanky <span>@itsSwanks</span></h1>
+        <p class="bio">Independent developer.<br><strong>I build useful, private apps</strong> for Apple platforms—and share what ships.</p>
+        <div class="actions"><a class="button primary" href="#projects">See my work ↓</a><a class="button" href="https://github.com/itsSwanks" rel="noopener">GitHub ↗</a></div>
+        <nav class="socials" aria-label="Social links"><a href="https://github.com/itsSwanks" rel="noopener">GitHub</a></nav>
       </div>
-      <div class="row"><span>On the App Store</span><span class="leader" aria-hidden="true"></span><span class="val hot">01</span></div>
-      <div class="row"><span>In review</span><span class="leader" aria-hidden="true"></span><span class="val">01</span></div>
-      <div class="row"><span>In development</span><span class="leader" aria-hidden="true"></span><span class="val">02</span></div>
-      <div class="row"><span>Slots open</span><span class="leader" aria-hidden="true"></span><span class="val">01</span></div>
+      <p class="tiny">Based on the internet · building one useful thing at a time</p>
     </aside>
-  </section>
 
-  <!-- ── projects ────────────────────────────────────────── -->
-  <main class="sect" aria-labelledby="proj-h">
-    <div class="sect-head reveal" style="--d:.4s">
-      <h2 id="proj-h" class="micro" style="color:var(--ink)">Project index</h2>
-      <div class="rule" aria-hidden="true"></div>
-      <span class="micro count">n&nbsp;=&nbsp;04</span>
+    <div class="content">
+      <section id="projects" aria-labelledby="projects-title">
+        <div class="section-title rise" style="--delay:.1s"><h2 id="projects-title">Shipped projects</h2><span class="count">02</span></div>
+        <div class="projects">
+          <article class="sticker project rise" style="--delay:.16s">
+            <div class="project-head">
+              <div class="app-icon" aria-hidden="true"><svg viewBox="0 0 96 96"><rect width="96" height="96" rx="24" fill="#0e8a80"/><rect x="40" y="20" width="16" height="11" rx="3.5" fill="#fff"/><rect x="33" y="31" width="30" height="47" rx="10" fill="#fff"/><rect x="45" y="47" width="6" height="17" rx="1.6" fill="#0e8a80"/><rect x="39.5" y="52.7" width="17" height="6" rx="1.6" fill="#0e8a80"/></svg></div>
+              <div class="project-copy"><div class="title-line"><h3>TYP — Track Your Pep</h3><span class="badge">New release</span></div><p>A clean, private peptide tracker for iPhone.</p></div>
+              <a class="project-link" href="typ/">Visit site ↗</a>
+            </div>
+            <div class="gallery phone" aria-label="TYP app previews"><img src="typ/img/today.png" alt="TYP Today screen" width="560" height="1217"><img src="typ/img/calendar.png" alt="TYP Calendar screen" width="560" height="1217" loading="lazy"><img src="typ/img/progress.png" alt="TYP Progress screen" width="560" height="1217" loading="lazy"></div>
+          </article>
+
+          <article class="sticker project rise" style="--delay:.22s">
+            <div class="project-head">
+              <div class="app-icon" aria-hidden="true"><svg viewBox="0 0 96 96"><rect width="96" height="96" rx="24" fill="#0f8377"/><path d="M26 20h28l14 14v38a4 4 0 0 1-4 4H26a4 4 0 0 1-4-4V24a4 4 0 0 1 4-4z" fill="#fff"/><path d="M54 20v10a4 4 0 0 0 4 4h10z" fill="#bcdcd6"/><rect x="32" y="39" width="27" height="4" rx="2" fill="#0f8377"/><rect x="32" y="48" width="30" height="4" rx="2" fill="#0f8377"/><circle cx="59" cy="66" r="11" fill="#0f8377"/><path d="M54 66l3.5 3.5L64 62" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div class="project-copy"><div class="title-line"><h3>Receira</h3><span class="badge">App Store</span></div><p>Your self-hosted documents, native on iPhone and iPad.</p></div>
+              <a class="project-link" href="https://apps.apple.com/app/id6774353903" rel="noopener">Get the app ↗</a>
+            </div>
+            <div class="gallery single" aria-label="Receira app preview"><img src="receira/img/documents.png" alt="Receira documents screen" width="640" height="1390" loading="lazy"></div>
+          </article>
+        </div>
+      </section>
+
+      <section aria-labelledby="lab-title">
+        <div class="section-title rise" style="--delay:.28s"><h2 id="lab-title">In the lab</h2><span class="count">02</span></div>
+        <div class="lab-grid">
+          <article class="sticker lab-card rise" style="--delay:.34s" data-number="03"><div class="lab-top"><span class="tiny" style="margin:0">Project 03</span><span class="status">In development</span></div><h3>Quiet build</h3><p>Still taking shape. Details when it earns a name.</p></article>
+          <article class="sticker lab-card rise" style="--delay:.4s" data-number="04"><div class="lab-top"><span class="tiny" style="margin:0">Project 04</span><span class="status">On the bench</span></div><h3>Next up</h3><p>Another useful little thing is loading.</p></article>
+        </div>
+      </section>
     </div>
-
-    <div class="grid">
-
-      <!-- N°001 · TYP — live card. Whole card links to typ/ -->
-      <a class="card card--featured reveal" style="--accent:var(--typ); --d:.46s" href="typ/">
-        <div class="info">
-          <div class="toprow">
-            <span class="micro num">N&deg;001&nbsp;&nbsp;/&nbsp;&nbsp;Health</span>
-            <span class="chip review"><span class="dot" aria-hidden="true"></span>In App Review</span>
-          </div>
-          <div class="title-row">
-            <span class="appmark" aria-hidden="true"><svg viewBox="0 0 96 96"><rect width="96" height="96" rx="24" fill="#0e8a80"/><rect x="40" y="20" width="16" height="11" rx="3.5" fill="#fff"/><rect x="33" y="31" width="30" height="47" rx="10" fill="#fff"/><rect x="45" y="47" width="6" height="17" rx="1.6" fill="#0e8a80"/><rect x="39.5" y="52.7" width="17" height="6" rx="1.6" fill="#0e8a80"/></svg></span>
-            <h3>TYP — Track Your Pep</h3>
-          </div>
-          <p class="tag-line">A clean, private peptide tracker for iPhone. Coming soon to the App Store — site is live now.</p>
-          <div class="tags">
-            <span class="chip">iOS</span>
-            <span class="chip">SwiftUI</span>
-            <span class="chip">Health</span>
-          </div>
-          <span class="cta">Open project site <span class="arrow" aria-hidden="true">&#8594;</span></span>
-        </div>
-        <div class="shotwrap">
-          <div class="shot">
-            <img src="typ/img/today.png" alt="TYP app screenshot: the Today view with adherence stats and the day's peptide dose schedule." width="560" height="1217">
-          </div>
-        </div>
-      </a>
-
-      <!-- N°003 · coming soon (right column, row 1) -->
-      <article class="card card--soon reveal" style="--d:.52s">
-        <div class="toprow">
-          <span class="micro num">N&deg;003</span>
-          <span class="chip"><span class="dot" aria-hidden="true"></span>In Dev</span>
-        </div>
-        <h3 class="redact">
-          <svg class="lock" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
-          <span class="sr">Unannounced project</span>
-          <i style="width:58px" aria-hidden="true"></i><i style="width:34px" aria-hidden="true"></i>
-        </h3>
-        <p class="tag-line">Being built in quiet. Details when it's real.</p>
-        <span class="ghost" aria-hidden="true">03</span>
-      </article>
-
-      <!-- N°002 · Receira — LIVE on the App Store. Whole card links to the store listing -->
-      <a class="card card--featured reveal" style="--accent:#14a08f; --d:.58s" href="https://apps.apple.com/app/id6774353903" rel="noopener">
-        <div class="info">
-          <div class="toprow">
-            <span class="micro num">N&deg;002&nbsp;&nbsp;/&nbsp;&nbsp;Documents</span>
-            <span class="chip live"><span class="dot" aria-hidden="true"></span>On the App Store</span>
-          </div>
-          <div class="title-row">
-            <span class="appmark" aria-hidden="true"><svg viewBox="0 0 96 96"><rect width="96" height="96" rx="24" fill="#0f8377"/><path d="M26 20h28l14 14v38a4 4 0 0 1-4 4H26a4 4 0 0 1-4-4V24a4 4 0 0 1 4-4z" fill="#fff"/><path d="M54 20v10a4 4 0 0 0 4 4h10z" fill="#bcdcd6"/><rect x="32" y="38" width="24" height="4.5" rx="2.25" fill="#0f8377"/><rect x="32" y="47" width="30" height="4.5" rx="2.25" fill="#0f8377"/><rect x="32" y="56" width="14" height="4.5" rx="2.25" fill="#0f8377"/><circle cx="59" cy="66" r="11" fill="#0f8377"/><path d="M54 66l3.5 3.5L64 62" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-            <h3>Receira</h3>
-          </div>
-          <p class="tag-line">A fast, native iPhone &amp; iPad client for your self-hosted Papra document server — scan, search, and read everything while your data stays on infrastructure you control.</p>
-          <div class="tags">
-            <span class="chip">iOS</span>
-            <span class="chip">iPadOS</span>
-            <span class="chip">Documents</span>
-          </div>
-          <span class="cta">Get it on the App Store <span class="arrow" aria-hidden="true">&#8594;</span></span>
-        </div>
-        <div class="shotwrap">
-          <div class="shot">
-            <img src="receira/img/documents.png" alt="Receira app screenshot: the Documents list showing scanned PDFs — passport, insurance policy, lease, utility bill and a receipt — each with tags." width="640" height="1390">
-          </div>
-        </div>
-      </a>
-
-      <!-- N°004 · coming soon (right column, row 2) -->
-      <article class="card card--soon reveal" style="--d:.64s">
-        <div class="toprow">
-          <span class="micro num">N&deg;004</span>
-          <span class="chip"><span class="dot" aria-hidden="true"></span>In Dev</span>
-        </div>
-        <h3 class="redact">
-          <svg class="lock" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
-          <span class="sr">Unannounced project</span>
-          <i style="width:40px" aria-hidden="true"></i><i style="width:64px" aria-hidden="true"></i>
-        </h3>
-        <p class="tag-line">On the bench. Announced when it ships.</p>
-        <span class="ghost" aria-hidden="true">04</span>
-      </article>
-
-      <!-- N°005 · reserved slot — future projects dock here -->
-      <article class="card card--slot reveal" style="--d:.7s; grid-column:1 / -1">
-        <span class="plus" aria-hidden="true">+</span>
-        <span class="micro">N&deg;005 — reserved · next build docks here</span>
-      </article>
-
-      <!-- ─────────────────────────────────────────────────────
-           TEMPLATE — copy to add a new live project card:
-
-      <a class="card reveal" style="--accent:#HEXCOLOR; --d:.7s" href="project-path/">
-        <div class="toprow">
-          <span class="micro num">N&deg;004&nbsp;&nbsp;/&nbsp;&nbsp;Category</span>
-          <span class="chip"><span class="dot"></span>Live</span>
-        </div>
-        <h3>Project Name</h3>
-        <p class="tag-line">One-line tagline.</p>
-        <div class="tags"><span class="chip">Tag</span></div>
-      </a>
-      ────────────────────────────────────────────────────── -->
-
-    </div>
-  </main>
-
-  <!-- ── footer ──────────────────────────────────────────── -->
-  <footer class="reveal" style="--d:.72s">
-    <span class="micro">&copy; <span id="yy">2026</span> Swanks</span>
-    <span class="micro" style="color:var(--ink-3)">No trackers &middot; no cookies &middot; hand-built</span>
-    <span class="micro"><a href="https://github.com/itsSwanks" rel="noopener">github.com/itsSwanks&nbsp;&#8599;</a></span>
-  </footer>
-
-</div>
-
-<div class="noise" aria-hidden="true"></div>
-
-<script>
-/* UTC clock — control-room heartbeat */
-(function(){
-  var el = document.getElementById('utc');
-  if(!el) return;
-  function p(n){ return String(n).padStart(2,'0'); }
-  function tick(){
-    var d = new Date();
-    el.textContent = p(d.getUTCHours())+':'+p(d.getUTCMinutes())+':'+p(d.getUTCSeconds())+' UTC';
-  }
-  tick();
-  setInterval(tick, 1000);
-})();
-document.getElementById('yy').textContent = new Date().getFullYear();
-</script>
+  </div></main>
+  <footer><span>© <span id="year">2026</span> Swanky</span><span>No trackers · no cookies · hand-built</span></footer>
+  <script>document.getElementById('year').textContent=new Date().getFullYear();</script>
 </body>
 </html>
