@@ -39,6 +39,8 @@ try{
   --amber:     #f2a33c;
   --amber-dim: rgba(242,163,60,.14);
   --glow:      rgba(242,140,40,.09);
+  --glow-2:    rgba(46,201,186,.075);
+  --glow-3:    rgba(122,92,255,.07);
   --gridline:  rgba(255,255,255,.033);
   --typ:       #2ec9ba;               /* TYP project accent, dark-safe */
   --typ-soft:  rgba(46,201,186,.14);
@@ -62,6 +64,8 @@ try{
   --amber:     #935a00;
   --amber-dim: rgba(147,90,0,.12);
   --glow:      rgba(206,132,26,.13);
+  --glow-2:    rgba(14,138,128,.09);
+  --glow-3:    rgba(111,78,210,.065);
   --gridline:  rgba(46,36,16,.055);
   --typ:       #0e8a80;
   --typ-soft:  rgba(14,138,128,.11);
@@ -84,6 +88,8 @@ try{
     --amber:     #935a00;
     --amber-dim: rgba(147,90,0,.12);
     --glow:      rgba(206,132,26,.13);
+    --glow-2:    rgba(14,138,128,.09);
+    --glow-3:    rgba(111,78,210,.065);
     --gridline:  rgba(46,36,16,.055);
     --typ:       #0e8a80;
     --typ-soft:  rgba(14,138,128,.11);
@@ -121,19 +127,73 @@ img{ max-width:100%; }
   background-size:64px 64px;
   -webkit-mask-image:radial-gradient(120% 75% at 50% 0%, #000 25%, transparent 78%);
           mask-image:radial-gradient(120% 75% at 50% 0%, #000 25%, transparent 78%);
+  animation:grid-drift 38s linear infinite;
+  will-change:background-position;
   z-index:0;
+}
+.gridbg::after{
+  content:"";
+  position:absolute;
+  inset:-20%;
+  background:linear-gradient(112deg,transparent 35%,color-mix(in srgb,var(--amber) 7%,transparent) 48%,transparent 61%);
+  transform:translateX(-42%) rotate(-3deg);
+  animation:light-sweep 18s cubic-bezier(.45,0,.55,1) infinite;
+  will-change:transform,opacity;
 }
 .aurora{
-  inset:-25%;
+  inset:-35%;
   background:
-    radial-gradient(640px 420px at 22% 12%, var(--glow), transparent 62%),
-    radial-gradient(520px 380px at 88% 78%, var(--typ-soft), transparent 65%);
-  animation:drift 30s ease-in-out infinite alternate;
+    radial-gradient(720px 500px at 18% 14%, var(--glow), transparent 64%),
+    radial-gradient(620px 460px at 82% 76%, var(--glow-2), transparent 66%),
+    radial-gradient(540px 420px at 64% 8%, var(--glow-3), transparent 68%);
+  animation:aurora-drift 24s cubic-bezier(.45,.05,.55,.95) infinite alternate;
+  transform-origin:50% 45%;
+  will-change:transform;
   z-index:0;
 }
-@keyframes drift{
-  from{ transform:translate3d(0,0,0) scale(1); }
-  to  { transform:translate3d(4%,3%,0) scale(1.07); }
+.aurora::before,
+.aurora::after{
+  content:"";
+  position:absolute;
+  border-radius:50%;
+  filter:blur(64px);
+  transform:translateZ(0);
+  will-change:transform;
+}
+.aurora::before{
+  width:min(68vw,900px); height:min(68vw,900px);
+  left:8%; top:0;
+  background:conic-gradient(from 25deg,transparent 0 24%,var(--glow) 35%,var(--glow-3) 52%,transparent 68% 100%);
+  opacity:.72;
+  animation:orbital-turn 34s linear infinite;
+}
+.aurora::after{
+  width:min(52vw,680px); height:min(52vw,680px);
+  right:5%; bottom:2%;
+  background:radial-gradient(circle at 38% 38%,var(--glow-2),transparent 62%);
+  opacity:.86;
+  animation:orbital-float 19s ease-in-out infinite alternate;
+}
+@keyframes grid-drift{
+  to{ background-position:64px 32px; }
+}
+@keyframes light-sweep{
+  0%,12%{ transform:translateX(-48%) rotate(-3deg); opacity:0; }
+  25%{ opacity:.75; }
+  58%{ opacity:.38; }
+  76%,100%{ transform:translateX(48%) rotate(-3deg); opacity:0; }
+}
+@keyframes aurora-drift{
+  0%{ transform:translate3d(-2%,-1%,0) scale(1) rotate(-1deg); }
+  55%{ transform:translate3d(2%,2%,0) scale(1.055) rotate(1deg); }
+  100%{ transform:translate3d(4%,-1%,0) scale(1.085) rotate(2deg); }
+}
+@keyframes orbital-turn{
+  to{ transform:rotate(360deg) scale(1.06); }
+}
+@keyframes orbital-float{
+  from{ transform:translate3d(-8%,-4%,0) scale(.94); }
+  to{ transform:translate3d(8%,7%,0) scale(1.09); }
 }
 .noise{
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
@@ -458,7 +518,7 @@ footer .micro a:hover{ color:var(--amber); }
 @media (prefers-reduced-motion: reduce){
   html{ scroll-behavior:auto; }
   .reveal{ animation:none; opacity:1; }
-  .aurora, .beacon, .chip.review .dot{ animation:none; }
+  .aurora, .aurora::before, .aurora::after, .gridbg, .gridbg::after, .beacon, .chip.review .dot{ animation:none; }
   .card, .cta .arrow, .shot, .card::before{ transition:none; }
   a.card:hover, a.card:focus-visible{ transform:none; }
   a.card:hover .shot, a.card:focus-visible .shot{ transform:rotate(1.6deg) translateY(6px); }
